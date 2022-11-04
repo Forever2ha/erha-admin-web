@@ -1,0 +1,16 @@
+export default {
+  'crud.add': '新增',
+  'crud.edit': '修改',
+  'crud.delete': '删除',
+  'crud.confirmEdit': '保存',
+  'crud.cancelEdit': '取消',
+  'crud.download': '下载',
+  'crud.search': '搜索',
+  'crud.reset': '重置',
+  'crud.table.config.border': '边界',
+  'crud.table.config.colResizable': '调整列宽',
+  'crud.table.config.tableHeader': '表头',
+  'crud.table.config.checkbox': '复选框',
+  'crud.table.config.stripe': '数据条纹',
+  'crud.table.update.result': '状态',
+};

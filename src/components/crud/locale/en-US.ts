@@ -1,0 +1,16 @@
+export default {
+  'crud.add': 'Add',
+  'crud.edit': 'Edit',
+  'crud.delete': 'Delete',
+  'crud.confirmEdit': 'Save',
+  'crud.cancelEdit': 'Cancel',
+  'crud.download': 'Download',
+  'crud.search': 'Search',
+  'crud.reset': 'Reset',
+  'crud.table.config.border': 'border',
+  'crud.table.config.colResizable': 'colResizable',
+  'crud.table.config.tableHeader': 'tableHeader',
+  'crud.table.config.checkbox': 'checkbox',
+  'crud.table.config.stripe': 'stripe',
+  'crud.table.update.result': 'Status',
+};
