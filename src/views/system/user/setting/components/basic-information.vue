@@ -39,7 +39,7 @@
     </a-form-item>
     <a-form-item>
       <a-space>
-        <a-button type="primary" @click="validate"> 修改 </a-button>
+        <a-button type="primary" @click="submit"> 修改 </a-button>
         <a-button type="secondary" @click="reset">
           {{ $t('userSetting.reset') }}
         </a-button>
@@ -49,13 +49,18 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { getCurrentInstance, ref } from 'vue';
   import { FormInstance } from '@arco-design/web-vue/es/form';
+  import axios from 'axios';
+  import { useUserStore } from '@/store';
 
+  const instance = getCurrentInstance();
+  const userStore = useUserStore();
+  const global = (instance as any).appContext.config.globalProperties;
   const formRef = ref<FormInstance>();
   const formData = ref({
-    email: '',
-    nickname: '',
+    email: undefined,
+    nickname: undefined,
     phone: undefined,
   });
   const validate = async () => {
@@ -67,6 +72,15 @@
   };
   const reset = async () => {
     await formRef.value?.resetFields();
+  };
+  const submit = async () => {
+    const res = await axios.put('/user/update', { ...formData.value });
+    if ((res as any).code === 20000) {
+      await userStore.info();
+      global.$message.success('修改成功！');
+    } else {
+      global.$message.error(`${(res as any).data[0].errorMsg}`);
+    }
   };
 </script>
 

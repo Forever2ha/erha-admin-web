@@ -40,7 +40,10 @@ const useUserStore = defineStore('user', {
     setInfo(partial: Partial<UserState>) {
       this.$patch({ ...partial, nowRole: (partial.nowRole as any).name });
     },
-
+    // 设置用户头像
+    setAvatarPath(path: string) {
+      (this.user as any).avatarName = path;
+    },
     // Reset user's information
     resetInfo() {
       // 这个方法是重置state

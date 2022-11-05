@@ -166,14 +166,6 @@
               </template>
             </a-dsubmenu>
             <a-doption>
-              <a-space @click="$router.push({ name: 'Info' })">
-                <icon-user />
-                <span>
-                  {{ $t('messageBox.userCenter') }}
-                </span>
-              </a-space>
-            </a-doption>
-            <a-doption>
               <a-space @click="$router.push({ name: 'Setting' })">
                 <icon-settings />
                 <span>
@@ -215,7 +207,7 @@
   const locales = [...LOCALE_OPTIONS];
   const avatar = computed(() => {
     return userStore.user?.avatarPath
-      ? `http://localhost:8000/avatar/avatar-${userStore.user?.avatarName}`
+      ? `http://localhost:8080/api/avatar/${userStore.user?.avatarName}`
       : Avatar;
   });
   const theme = computed(() => {
@@ -292,6 +284,7 @@
     display: flex;
     padding-right: 20px;
     list-style: none;
+
     :deep(.locale-select) {
       border-radius: 20px;
     }

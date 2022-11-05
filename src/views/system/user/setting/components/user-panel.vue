@@ -71,19 +71,22 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { getCurrentInstance, ref } from 'vue';
   import {
     FileItem,
     RequestOption,
   } from '@arco-design/web-vue/es/upload/interfaces';
   import { useUserStore } from '@/store';
   import type { DescData } from '@arco-design/web-vue/es/descriptions/interface';
+  import { userUploadApi } from '@/api/user';
 
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
   const userStore = useUserStore();
   const file = {
     uid: '-2',
     name: 'avatar.png',
-    url: `http://localhost:8000/avatar/avatar-${userStore.user?.avatarName}`,
+    url: `http://localhost:8080/api/avatar/${userStore.user?.avatarName}`,
   };
   const renderData = [
     {
@@ -142,7 +145,7 @@
         onError,
         onSuccess,
         fileItem,
-        name = 'file',
+        name = 'avatar',
       } = options;
       onProgress(20);
       const formData = new FormData();
@@ -154,6 +157,20 @@
         }
         onProgress(parseInt(String(percent), 10), event);
       };
+      try {
+        // https://github.com/axios/axios/issues/1630
+        // https://github.com/nuysoft/Mock/issues/127
+
+        const res = await userUploadApi(formData, {
+          controller,
+          onUploadProgress,
+        });
+        userStore.setAvatarPath(res.data.avatar);
+        global.$message.success('修改成功！');
+        onSuccess(res);
+      } catch (error) {
+        onError(error);
+      }
     })();
     return {
       abort() {
@@ -168,11 +185,13 @@
     padding: 14px 0 4px 4px;
     border-radius: 4px;
   }
+
   :deep(.arco-avatar-trigger-icon-button) {
     width: 32px;
     height: 32px;
     line-height: 32px;
     background-color: #e8f3ff;
+
     .arco-icon-camera {
       margin-top: 8px;
       color: rgb(var(--arcoblue-6));

@@ -42,3 +42,15 @@ export function switchRoles(name: string) {
 export function getMenuList() {
   return axios.get<RouteRecordNormalized[]>('/menu/nowUser');
 }
+
+// 上传头像
+export function userUploadApi(
+  data: FormData,
+  config: {
+    controller: AbortController;
+    onUploadProgress?: (progressEvent: any) => void;
+  }
+) {
+  // const controller = new AbortController();
+  return axios.post('/user/updateAvatar', data, config);
+}
