@@ -1,13 +1,8 @@
 <template>
   <div class="container">
     <div class="panel">
-      <a-space
-        direction="vertical"
-        fill
-        size="medium"
-        style="padding-bottom: 30px"
-      >
-        <a-row :gutter="24">
+      <div style="height: 100%">
+        <a-row :gutter="24" style="margin-bottom: 12px">
           <a-col :span="6">
             <!--部门名称搜索框-->
             <a-input
@@ -43,6 +38,7 @@
           :edit-permission="['dept:edit']"
           :del-permission="['dept:del']"
           :download-permission="['dept:list']"
+          style="margin-bottom: 12px"
         >
           <!--添加部门表单-->
           <template #addForm>
@@ -129,257 +125,256 @@
           <template #right> </template>
         </CrudOperation>
 
-        <div style="height: 65vh; padding-bottom: 20px">
-          <a-table
-            ref="table"
-            v-model:selectedKeys="crud.options.tableInfo.selectKeys"
-            row-key="id"
-            :load-more="loadMore"
-            :columns="tableColumns"
-            :data="crud.options.tableInfo.data"
-            :pagination="false"
-            :scroll="{ y: '100%' }"
-            :loading="crud.status.value === CrudStatus.REFRESHING"
-            :column-resizable="
-              crud.options.tableInfo.componentConfig.colResizable
-            "
-            :bordered="{
-              cell: crud.options.tableInfo.componentConfig.border,
-            }"
-            :stripe="crud.options.tableInfo.componentConfig.stripe"
-            :show-header="crud.options.tableInfo.componentConfig.tableHeader"
-            :row-selection="
-              crud.options.tableInfo.componentConfig.checkbox
-                ? {
-                    type: 'checkbox',
-                    showCheckedAll: true,
-                  }
-                : undefined
-            "
-          >
-            <!--修改结果-->
-            <template #result="{ record }">
-              <!--修改完毕并且不完全修改成功的时候展示-->
+        <a-table
+          ref="table"
+          v-model:selectedKeys="crud.options.tableInfo.selectKeys"
+          row-key="id"
+          :load-more="loadMore"
+          :columns="tableColumns"
+          :data="crud.options.tableInfo.data"
+          :pagination="false"
+          :scroll="{ y: '100%' }"
+          :loading="crud.status.value === CrudStatus.REFRESHING"
+          :column-resizable="
+            crud.options.tableInfo.componentConfig.colResizable
+          "
+          :bordered="{
+            cell: crud.options.tableInfo.componentConfig.border,
+          }"
+          :stripe="crud.options.tableInfo.componentConfig.stripe"
+          :show-header="crud.options.tableInfo.componentConfig.tableHeader"
+          :row-selection="
+            crud.options.tableInfo.componentConfig.checkbox
+              ? {
+                  type: 'checkbox',
+                  showCheckedAll: true,
+                }
+              : undefined
+          "
+          style="height: calc(100% - 84px)"
+        >
+          <!--修改结果-->
+          <template #result="{ record }">
+            <!--修改完毕并且不完全修改成功的时候展示-->
+            <div
+              v-show="
+                crud.options.tableInfo.selectKeys.includes(record.id) &&
+                crud.options.tableInfo.isEdit
+              "
+            >
+              <!--修改成功的行-->
               <div
                 v-show="
-                  crud.options.tableInfo.selectKeys.includes(record.id) &&
-                  crud.options.tableInfo.isEdit
+                  !record.updateErr && typeof record.updateErr === 'boolean'
                 "
               >
-                <!--修改成功的行-->
-                <div
-                  v-show="
-                    !record.updateErr && typeof record.updateErr === 'boolean'
-                  "
-                >
-                  <a-popover>
-                    <a-tag color="green">
-                      <icon-check />
-                    </a-tag>
+                <a-popover>
+                  <a-tag color="green">
+                    <icon-check />
+                  </a-tag>
 
-                    <template #title> 更改成功 </template>
+                  <template #title> 更改成功 </template>
+                </a-popover>
+              </div>
+              <!--修改失败的行-->
+              <div v-show="record.updateErr !== false">
+                <div v-show="record.updateErr === undefined">
+                  <a-tag color="blue"> <icon-edit />... </a-tag>
+                </div>
+                <div v-show="record.updateErr">
+                  <a-popover>
+                    <a-tag color="red">
+                      <icon-close />
+                    </a-tag>
+                    <template #title> 更改失败 </template>
+                    <template #content>
+                      <a-list size="small">
+                        <a-list-item
+                          v-for="(err, index) in record.updateErr"
+                          :key="index"
+                        >
+                          [{{ $t(`system.dept.table.${err.errorField}`) }}]
+                          {{ err.errorMsg }}
+                          --->[{{ err.errorVal }}]
+                        </a-list-item>
+                      </a-list>
+                    </template>
                   </a-popover>
                 </div>
-                <!--修改失败的行-->
-                <div v-show="record.updateErr !== false">
-                  <div v-show="record.updateErr === undefined">
-                    <a-tag color="blue"> <icon-edit />... </a-tag>
-                  </div>
-                  <div v-show="record.updateErr">
-                    <a-popover>
-                      <a-tag color="red">
-                        <icon-close />
-                      </a-tag>
-                      <template #title> 更改失败 </template>
-                      <template #content>
-                        <a-list size="small">
-                          <a-list-item
-                            v-for="(err, index) in record.updateErr"
-                            :key="index"
-                          >
-                            [{{ $t(`system.dept.table.${err.errorField}`) }}]
-                            {{ err.errorMsg }}
-                            --->[{{ err.errorVal }}]
-                          </a-list-item>
-                        </a-list>
-                      </template>
-                    </a-popover>
-                  </div>
-                </div>
               </div>
-            </template>
+            </div>
+          </template>
 
-            <!--名称-->
-            <template #name="{ record }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+          <!--名称-->
+          <template #name="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.name }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
                 {{ record.name }}
               </div>
-
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  {{ record.name }}
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  {{
-                    crud.options.form[record.id].name
-                      ? crud.options.form[record.id].name
-                      : record.name
-                  }}
-                </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].name
+                    ? crud.options.form[record.id].name
+                    : record.name
+                }}
               </div>
+            </div>
 
-              <!--修改情况下-->
-              <div v-if="record.editable">
-                <a-input
-                  v-model="crud.options.form[record.id].name"
-                  :default-value="record.name"
-                ></a-input>
-              </div>
-            </template>
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input
+                v-model="crud.options.form[record.id].name"
+                :default-value="record.name"
+              ></a-input>
+            </div>
+          </template>
 
-            <!--排序-->
-            <template #deptSort="{ record }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+          <!--排序-->
+          <template #deptSort="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.deptSort }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
                 {{ record.deptSort }}
               </div>
-
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  {{ record.deptSort }}
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  {{
-                    crud.options.form[record.id].deptSort
-                      ? crud.options.form[record.id].deptSort
-                      : record.deptSort
-                  }}
-                </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].deptSort
+                    ? crud.options.form[record.id].deptSort
+                    : record.deptSort
+                }}
               </div>
+            </div>
 
-              <!--修改情况下-->
-              <div v-if="record.editable">
-                <a-input-number
-                  v-model="crud.options.form[record.id].deptSort"
-                  :default-value="record.deptSort"
-                  :min="0"
-                />
-              </div>
-            </template>
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input-number
+                v-model="crud.options.form[record.id].deptSort"
+                :default-value="record.deptSort"
+                :min="0"
+              />
+            </div>
+          </template>
 
-            <!--状态-->
-            <template #enabled="{ record }">
-              <a-switch
-                v-model="record.enabled"
-                :loading="loading"
-                @change="enableChange(record)"
-              >
-                <template #checked> 启用 </template>
-                <template #unchecked> 禁用 </template>
-              </a-switch></template
+          <!--状态-->
+          <template #enabled="{ record }">
+            <a-switch
+              v-model="record.enabled"
+              :loading="loading"
+              @change="enableChange(record)"
             >
+              <template #checked> 启用 </template>
+              <template #unchecked> 禁用 </template>
+            </a-switch></template
+          >
 
-            <!--是否是顶级部门-->
-            <template #isTop="{ record }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-                {{ !record.pid }}
+          <!--是否是顶级部门-->
+          <template #isTop="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ !record.pid }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                <a-radio-group disabled :default-value="!record.pid">
+                  <a-radio :value="true"> 是 </a-radio>
+                  <a-radio :value="false"> 否 </a-radio>
+                </a-radio-group>
               </div>
-
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  <a-radio-group disabled :default-value="!record.pid">
-                    <a-radio :value="true"> 是 </a-radio>
-                    <a-radio :value="false"> 否 </a-radio>
-                  </a-radio-group>
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  <a-radio-group
-                    disabled
-                    :default-value="
-                      crud.options.form[record.id].isTop
-                        ? crud.options.form[record.id].isTop
-                        : !record.pid
-                    "
-                  >
-                    <a-radio :value="true"> 是 </a-radio>
-                    <a-radio :value="false"> 否 </a-radio>
-                  </a-radio-group>
-                </div>
-              </div>
-
-              <!--修改情况下-->
-              <div v-if="record.editable">
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
                 <a-radio-group
-                  v-model="crud.options.form[record.id].isTop"
-                  :default-value="!record.pid"
+                  disabled
+                  :default-value="
+                    crud.options.form[record.id].isTop
+                      ? crud.options.form[record.id].isTop
+                      : !record.pid
+                  "
                 >
                   <a-radio :value="true"> 是 </a-radio>
                   <a-radio :value="false"> 否 </a-radio>
                 </a-radio-group>
               </div>
-            </template>
+            </div>
 
-            <!--上级部门-->
-            <template #pid="{ record }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-radio-group
+                v-model="crud.options.form[record.id].isTop"
+                :default-value="!record.pid"
+              >
+                <a-radio :value="true"> 是 </a-radio>
+                <a-radio :value="false"> 否 </a-radio>
+              </a-radio-group>
+            </div>
+          </template>
+
+          <!--上级部门-->
+          <template #pid="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.pid ? shortDeptInfo[record.pid] : '-' }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
                 {{ record.pid ? shortDeptInfo[record.pid] : '-' }}
               </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].pid
+                    ? shortDeptInfo[crud.options.form[record.id].pid]
+                    : record.pid
+                    ? shortDeptInfo[record.pid]
+                    : '-'
+                }}
+              </div>
+            </div>
 
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  {{ record.pid ? shortDeptInfo[record.pid] : '-' }}
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  {{
-                    crud.options.form[record.id].pid
-                      ? shortDeptInfo[crud.options.form[record.id].pid]
-                      : record.pid
-                      ? shortDeptInfo[record.pid]
-                      : '-'
-                  }}
-                </div>
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <div
+                v-if="
+                  crud.options.form[record.id].isTop === undefined
+                    ? !record.pid
+                    : crud.options.form[record.id].isTop
+                "
+              >
+                -
               </div>
 
-              <!--修改情况下-->
-              <div v-if="record.editable">
-                <div
-                  v-if="
-                    crud.options.form[record.id].isTop === undefined
-                      ? !record.pid
-                      : crud.options.form[record.id].isTop
-                  "
-                >
-                  -
-                </div>
-
-                <a-tree-select
-                  v-else
-                  v-model="crud.options.form[record.id].pid"
-                  :default-value="
-                    record.pid ? shortDeptInfo[record.pid] : '请选择部门'
-                  "
-                  :data="crud.options.props.deptTreeData"
-                />
-              </div>
-            </template>
-          </a-table>
-        </div>
-      </a-space>
+              <a-tree-select
+                v-else
+                v-model="crud.options.form[record.id].pid"
+                :default-value="
+                  record.pid ? shortDeptInfo[record.pid] : '请选择部门'
+                "
+                :data="crud.options.props.deptTreeData"
+              />
+            </div>
+          </template>
+        </a-table>
+      </div>
     </div>
   </div>
 </template>
@@ -667,13 +662,14 @@
 
 <style scoped>
   .container {
+    height: 100%;
     padding: 16px 20px;
     padding-bottom: 0;
     background-color: var(--color-fill-2);
   }
 
   .panel {
-    height: 80vh;
+    height: 100%;
     padding: 16px;
     background-color: var(--color-bg-2);
     border-radius: 4px;

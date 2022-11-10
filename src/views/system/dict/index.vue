@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="panel">
-      <a-row :gutter="24">
-        <a-col :span="11">
+      <a-row :gutter="24" style="height: 100%">
+        <a-col :span="11" style="height: 100%">
           <Dict />
         </a-col>
 
-        <a-col :span="13">
+        <a-col :span="13" style="height: 100%">
           <DictDetail />
         </a-col>
       </a-row>
@@ -21,13 +21,14 @@
 
 <style scoped>
   .container {
+    height: 100%;
     padding: 16px 20px;
     padding-bottom: 0;
     background-color: var(--color-fill-2);
   }
 
   .panel {
-    height: 80vh;
+    height: 100%;
     padding: 16px;
     background-color: var(--color-bg-2);
     border-radius: 4px;

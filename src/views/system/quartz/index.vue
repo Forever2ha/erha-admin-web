@@ -1,16 +1,11 @@
 <template>
   <div class="container">
     <div class="panel">
-      <a-space
-        direction="vertical"
-        fill
-        size="medium"
-        style="padding-bottom: 30px"
-      >
+      <div style="position: relative; height: 100%">
         <!-- ================================
              上方搜索框
         ================================= -->
-        <a-row :gutter="24">
+        <a-row :gutter="24" style="margin-bottom: 12px">
           <a-col :span="6">
             <!--名称搜索框-->
             <a-input
@@ -33,6 +28,7 @@
           :edit-permission="['quartz:edit']"
           :del-permission="['quartz:del']"
           :download-permission="['quartz:list']"
+          style="margin-bottom: 12px"
         >
           <template #addForm>
             <!--任务名称、描述]-->
@@ -187,8 +183,7 @@
           </template>
         </CrudOperation>
         <Log />
-      </a-space>
-      <div style="height: 53vh">
+
         <a-table
           ref="table"
           v-model:selectedKeys="crud.options.tableInfo.selectKeys"
@@ -214,6 +209,7 @@
                 }
               : undefined
           "
+          style="height: calc(100% - 128px)"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -577,9 +573,9 @@
             </a-switch></template
           >
         </a-table>
-        <a-row justify="end" style="padding-top: 10px">
-          <Pagination />
-        </a-row>
+        <Pagination
+          style="position: absolute; right: 0; bottom: 0; padding-right: 7px"
+        />
       </div>
     </div>
   </div>
@@ -787,24 +783,26 @@
 
 <style scoped>
   .container {
+    height: 100%;
     padding: 16px 20px;
     padding-bottom: 0;
     background-color: var(--color-fill-2);
   }
 
   .panel {
-    height: 80vh;
+    height: 100%;
     padding: 16px;
     background-color: var(--color-bg-2);
     border-radius: 4px;
   }
 
   .button {
-    border-color: #a871e3;
     color: #a871e3;
+    border-color: #a871e3;
   }
+
   .button:hover {
-    border-color: #c396ed;
     color: #c396ed;
+    border-color: #c396ed;
   }
 </style>

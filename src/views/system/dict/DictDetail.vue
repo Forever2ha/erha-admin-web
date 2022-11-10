@@ -1,6 +1,10 @@
 <template>
   <div ref="rootDiv"></div>
-  <a-card :style="{ width: '100%' }" :bordered="false">
+  <a-card
+    :style="{ width: '100%' }"
+    :bordered="false"
+    style="position: relative; height: 100%"
+  >
     <!--添加窗口-->
     <a-modal
       v-model:visible="addVisible"
@@ -175,7 +179,7 @@
             }
           : undefined
       "
-      style="height: 50vh"
+      style="height: calc(100% - 80px); margin-bottom: 12px"
     >
       <!--修改结果-->
       <template #result="{ record }">
@@ -327,9 +331,9 @@
         </div>
       </template>
     </a-table>
-    <a-row justify="end" style="padding-top: 10px">
-      <Pagination />
-    </a-row>
+    <Pagination
+      style="position: absolute; right: 0; bottom: 0; padding-right: 16px"
+    />
   </a-card>
 </template>
 
@@ -586,4 +590,8 @@
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
-<style scoped></style>
+<style scoped>
+  :deep(.arco-card-body) {
+    height: 100%;
+  }
+</style>

@@ -1,219 +1,209 @@
 <template>
-  <div>
-    <a-space
-      direction="vertical"
-      fill
-      size="medium"
-      style="padding-bottom: 30px"
-    >
-      <a-row :gutter="24">
-        <a-col :span="8">
-          <!--字典名称搜索框-->
-          <a-input
-            v-model="crud.options.query.name"
-            placeholder="输入名称或者描述搜索"
-          />
-        </a-col>
+  <div style="height: 100%">
+    <a-row :gutter="24" style="margin-bottom: 12px">
+      <a-col :span="8">
+        <!--字典名称搜索框-->
+        <a-input
+          v-model="crud.options.query.name"
+          placeholder="输入名称或者描述搜索"
+        />
+      </a-col>
 
-        <a-col :span="6">
-          <RROperation
-            :enabled-reset="!dictDetailIsEdit"
-            :enabled-search="!dictDetailIsEdit"
-          />
-        </a-col>
-      </a-row>
-
-      <!--crudOperation-->
-      <CrudOperation
-        :disable-all="dictDetailIsEdit"
-        :add-permission="['dict:list']"
-        :edit-permission="['dict:edit']"
-        :del-permission="['dict:del']"
-        :download-permission="['dict:list']"
-      >
-        <template #addForm>
-          <!--字典名称-->
-          <a-row>
-            <a-form-item
-              field="name"
-              :label="$t('system.dict.table.name')"
-              :rules="[{ required: true, message: '字典名不能为空' }]"
-            >
-              <a-input v-model="crud.options.form.name" />
-            </a-form-item>
-          </a-row>
-          <!--字典描述-->
-          <a-row>
-            <a-form-item
-              field="description"
-              :label="$t('system.dict.table.description')"
-            >
-              <a-input v-model="crud.options.form.description" />
-            </a-form-item>
-          </a-row>
-        </template>
-      </CrudOperation>
-    </a-space>
-
-    <!--表格-->
-    <a-row style="height: 60vh">
-      <a-col :span="24">
-        <a-card title="字典列表" :style="{ width: '100%' }" :bordered="false">
-          <a-table
-            v-model:selectedKeys="crud.options.tableInfo.selectKeys"
-            row-key="id"
-            :columns="tableColumns"
-            :data="crud.options.tableInfo.data"
-            :pagination="false"
-            :scroll="{ y: '100%' }"
-            :loading="crud.status.value === CrudStatus.REFRESHING"
-            :column-resizable="
-              crud.options.tableInfo.componentConfig.colResizable
-            "
-            :bordered="{
-              cell: crud.options.tableInfo.componentConfig.border,
-            }"
-            :stripe="crud.options.tableInfo.componentConfig.stripe"
-            :show-header="crud.options.tableInfo.componentConfig.tableHeader"
-            :row-selection="
-              crud.options.tableInfo.componentConfig.checkbox
-                ? {
-                    type: 'checkbox',
-                    showCheckedAll: true,
-                  }
-                : undefined
-            "
-            style="height: 40vh"
-            @row-click="tableColClick"
-          >
-            <!--修改结果-->
-            <template #result="{ record }">
-              <!--修改完毕并且不完全修改成功的时候展示-->
-              <div
-                v-show="
-                  crud.options.tableInfo.selectKeys.includes(record.id) &&
-                  crud.options.tableInfo.isEdit
-                "
-              >
-                <!--修改成功的行-->
-                <div
-                  v-show="
-                    !record.updateErr && typeof record.updateErr === 'boolean'
-                  "
-                >
-                  <a-popover>
-                    <a-tag color="green">
-                      <icon-check />
-                    </a-tag>
-
-                    <template #title> 更改成功 </template>
-                  </a-popover>
-                </div>
-                <!--修改失败的行-->
-                <div v-show="record.updateErr !== false">
-                  <div v-show="record.updateErr === undefined">
-                    <a-tag color="blue"> <icon-edit />... </a-tag>
-                  </div>
-                  <div v-show="record.updateErr">
-                    <a-popover>
-                      <a-tag color="red">
-                        <icon-close />
-                      </a-tag>
-                      <template #title> 更改失败 </template>
-                      <template #content>
-                        <a-list size="small">
-                          <a-list-item
-                            v-for="(err, index) in record.updateErr"
-                            :key="index"
-                          >
-                            [{{
-                              $t(
-                                `system.${crud.options.title}.table.${err.errorField}`
-                              )
-                            }}]
-                            {{ err.errorMsg }}
-                            --->[{{ err.errorVal }}]
-                          </a-list-item>
-                        </a-list>
-                      </template>
-                    </a-popover>
-                  </div>
-                </div>
-              </div>
-            </template>
-
-            <!--名称-->
-            <template #name="{ record, rowIndex }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-                {{ record.name }}
-              </div>
-
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  {{ record.name }}
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  {{
-                    crud.options.form[record.id].name
-                      ? crud.options.form[record.id].name
-                      : record.name
-                  }}
-                </div>
-              </div>
-
-              <!--修改情况下-->
-              <div v-if="record.editable">
-                <a-input
-                  v-model="crud.options.form[record.id].name"
-                  :default-value="crud.options.tableInfo.data[rowIndex].name"
-                ></a-input>
-              </div>
-            </template>
-
-            <!--描述-->
-            <template #description="{ record, rowIndex }">
-              <!--正常情况下-->
-              <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-                {{ record.description }}
-              </div>
-
-              <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-              <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-                <!--未修改的行-->
-                <div v-show="!crud.options.form[record.id]">
-                  {{ record.description }}
-                </div>
-                <!--修改完毕提交后-->
-                <div v-if="crud.options.form[record.id]">
-                  {{
-                    crud.options.form[record.id].description
-                      ? crud.options.form[record.id].description
-                      : record.description
-                  }}
-                </div>
-              </div>
-
-              <!--修改情况下-->
-              <div v-if="record.editable">
-                <a-input
-                  v-model="crud.options.form[record.id].description"
-                  :default-value="
-                    crud.options.tableInfo.data[rowIndex].description
-                  "
-                ></a-input>
-              </div>
-            </template>
-          </a-table>
-          <a-row justify="end" style="padding-top: 10px">
-            <Pagination />
-          </a-row>
-        </a-card>
+      <a-col :span="6">
+        <RROperation
+          :enabled-reset="!dictDetailIsEdit"
+          :enabled-search="!dictDetailIsEdit"
+        />
       </a-col>
     </a-row>
+
+    <!--crudOperation-->
+    <CrudOperation
+      :disable-all="dictDetailIsEdit"
+      :add-permission="['dict:list']"
+      :edit-permission="['dict:edit']"
+      :del-permission="['dict:del']"
+      :download-permission="['dict:list']"
+      style="margin-bottom: 12px"
+    >
+      <template #addForm>
+        <!--字典名称-->
+        <a-row>
+          <a-form-item
+            field="name"
+            :label="$t('system.dict.table.name')"
+            :rules="[{ required: true, message: '字典名不能为空' }]"
+          >
+            <a-input v-model="crud.options.form.name" />
+          </a-form-item>
+        </a-row>
+        <!--字典描述-->
+        <a-row>
+          <a-form-item
+            field="description"
+            :label="$t('system.dict.table.description')"
+          >
+            <a-input v-model="crud.options.form.description" />
+          </a-form-item>
+        </a-row>
+      </template>
+    </CrudOperation>
+    <!--表格-->
+    <a-card
+      title="字典列表"
+      :style="{ width: '100%' }"
+      :bordered="false"
+      style="position: relative; height: calc(100% - 84px)"
+    >
+      <a-table
+        v-model:selectedKeys="crud.options.tableInfo.selectKeys"
+        row-key="id"
+        :columns="tableColumns"
+        :data="crud.options.tableInfo.data"
+        :pagination="false"
+        :scroll="{ y: '100%' }"
+        :loading="crud.status.value === CrudStatus.REFRESHING"
+        :column-resizable="crud.options.tableInfo.componentConfig.colResizable"
+        :bordered="{
+          cell: crud.options.tableInfo.componentConfig.border,
+        }"
+        :stripe="crud.options.tableInfo.componentConfig.stripe"
+        :show-header="crud.options.tableInfo.componentConfig.tableHeader"
+        :row-selection="
+          crud.options.tableInfo.componentConfig.checkbox
+            ? {
+                type: 'checkbox',
+                showCheckedAll: true,
+              }
+            : undefined
+        "
+        style="height: calc(100% - 80px); margin-bottom: 12px"
+        @row-click="tableColClick"
+      >
+        <!--修改结果-->
+        <template #result="{ record }">
+          <!--修改完毕并且不完全修改成功的时候展示-->
+          <div
+            v-show="
+              crud.options.tableInfo.selectKeys.includes(record.id) &&
+              crud.options.tableInfo.isEdit
+            "
+          >
+            <!--修改成功的行-->
+            <div
+              v-show="
+                !record.updateErr && typeof record.updateErr === 'boolean'
+              "
+            >
+              <a-popover>
+                <a-tag color="green">
+                  <icon-check />
+                </a-tag>
+
+                <template #title> 更改成功 </template>
+              </a-popover>
+            </div>
+            <!--修改失败的行-->
+            <div v-show="record.updateErr !== false">
+              <div v-show="record.updateErr === undefined">
+                <a-tag color="blue"> <icon-edit />... </a-tag>
+              </div>
+              <div v-show="record.updateErr">
+                <a-popover>
+                  <a-tag color="red">
+                    <icon-close />
+                  </a-tag>
+                  <template #title> 更改失败 </template>
+                  <template #content>
+                    <a-list size="small">
+                      <a-list-item
+                        v-for="(err, index) in record.updateErr"
+                        :key="index"
+                      >
+                        [{{
+                          $t(
+                            `system.${crud.options.title}.table.${err.errorField}`
+                          )
+                        }}]
+                        {{ err.errorMsg }}
+                        --->[{{ err.errorVal }}]
+                      </a-list-item>
+                    </a-list>
+                  </template>
+                </a-popover>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!--名称-->
+        <template #name="{ record, rowIndex }">
+          <!--正常情况下-->
+          <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+            {{ record.name }}
+          </div>
+
+          <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+          <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+            <!--未修改的行-->
+            <div v-show="!crud.options.form[record.id]">
+              {{ record.name }}
+            </div>
+            <!--修改完毕提交后-->
+            <div v-if="crud.options.form[record.id]">
+              {{
+                crud.options.form[record.id].name
+                  ? crud.options.form[record.id].name
+                  : record.name
+              }}
+            </div>
+          </div>
+
+          <!--修改情况下-->
+          <div v-if="record.editable">
+            <a-input
+              v-model="crud.options.form[record.id].name"
+              :default-value="crud.options.tableInfo.data[rowIndex].name"
+            ></a-input>
+          </div>
+        </template>
+
+        <!--描述-->
+        <template #description="{ record, rowIndex }">
+          <!--正常情况下-->
+          <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+            {{ record.description }}
+          </div>
+
+          <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+          <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+            <!--未修改的行-->
+            <div v-show="!crud.options.form[record.id]">
+              {{ record.description }}
+            </div>
+            <!--修改完毕提交后-->
+            <div v-if="crud.options.form[record.id]">
+              {{
+                crud.options.form[record.id].description
+                  ? crud.options.form[record.id].description
+                  : record.description
+              }}
+            </div>
+          </div>
+
+          <!--修改情况下-->
+          <div v-if="record.editable">
+            <a-input
+              v-model="crud.options.form[record.id].description"
+              :default-value="crud.options.tableInfo.data[rowIndex].description"
+            ></a-input>
+          </div>
+        </template>
+      </a-table>
+      <Pagination
+        style="position: absolute; right: 0; bottom: 0; padding-right: 16px"
+      />
+    </a-card>
   </div>
 </template>
 
@@ -413,4 +403,8 @@
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
-<style scoped></style>
+<style scoped>
+  :deep(.arco-card-body) {
+    height: 100%;
+  }
+</style>

@@ -1,8 +1,10 @@
 <template>
-  <a-config-provider :locale="locale">
-    <router-view />
-    <global-setting />
-  </a-config-provider>
+  <div style="width: 100vw; height: 100vh">
+    <a-config-provider :locale="locale">
+      <router-view />
+      <global-setting />
+    </a-config-provider>
+  </div>
 </template>
 
 <script lang="ts" setup>

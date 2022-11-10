@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="panel">
-      <a-space direction="vertical" fill size="medium">
-        <a-row :gutter="24">
+      <div style="height: 100%">
+        <a-row :gutter="24" style="margin-bottom: 12px">
           <a-col :span="6">
             <!--名称/角色描述搜索框-->
             <a-input
@@ -24,6 +24,7 @@
           :edit-permission="['role:edit']"
           :del-permission="['role:del']"
           :download-permission="['role:list']"
+          style="margin-bottom: 12px"
         >
           <template #addForm>
             <!--角色名称-->
@@ -125,13 +126,12 @@
         </CrudOperation>
 
         <!--表格-->
-        <a-row :gutter="20" style="height: 60vh">
-          <a-col :span="15">
+        <a-row :gutter="24" style="height: calc(100% - 84px)">
+          <a-col :span="15" style="height: 100%">
             <a-card
               title="角色列表"
-              :style="{ width: '100%' }"
               :bordered="false"
-              hoverable
+              style="position: relative; height: 100%"
             >
               <a-table
                 v-model:selectedKeys="crud.options.tableInfo.selectKeys"
@@ -159,7 +159,7 @@
                       }
                     : undefined
                 "
-                style="height: 40vh"
+                style="height: calc(100% - 80px); margin-bottom: 12px"
                 @row-click="tableColClick"
               >
                 <!--修改结果-->
@@ -448,67 +448,74 @@
                   </div>
                 </template>
               </a-table>
-              <a-row justify="end" style="padding-top: 10px">
-                <Pagination />
-              </a-row>
+
+              <Pagination
+                style="
+                  position: absolute;
+                  right: 0;
+                  bottom: 0;
+                  padding-right: 16px;
+                "
+              />
             </a-card>
           </a-col>
-          <a-col :span="9">
-            <div style="height: 62vh">
-              <a-card
-                :style="{ width: '100%', height: '100%' }"
-                :bordered="false"
-                hoverable
+          <a-col :span="9" style="height: 100%">
+            <a-card
+              :style="{ width: '100%', height: '100%' }"
+              :bordered="false"
+              style="height: 100%"
+            >
+              <template #title>
+                <span>菜单分配: </span>
+                <span style="color: rgb(var(--arcoblue-5))">{{
+                  clickRoleName
+                }}</span>
+                <span
+                  v-show="
+                    clickRoleName === '' && !crud.options.tableInfo.isEdit
+                  "
+                  style="color: var(--color-neutral-4)"
+                  >请点击一个角色
+                </span>
+                <span
+                  v-show="clickRoleName === '' && crud.options.tableInfo.isEdit"
+                  style="color: var(--color-neutral-4)"
+                  >正在编辑角色，无法选择菜单。
+                </span>
+              </template>
+              <div
+                style="
+                  width: 100%;
+                  height: calc(100vh - 350px);
+                  overflow-y: auto;
+                "
               >
-                <template #title>
-                  <span>菜单分配: </span>
-                  <span style="color: rgb(var(--arcoblue-5))">{{
-                    clickRoleName
-                  }}</span>
-                  <span
-                    v-show="
-                      clickRoleName === '' && !crud.options.tableInfo.isEdit
-                    "
-                    style="color: var(--color-neutral-4)"
-                    >请点击一个角色
-                  </span>
-                  <span
-                    v-show="
-                      clickRoleName === '' && crud.options.tableInfo.isEdit
-                    "
-                    style="color: var(--color-neutral-4)"
-                    >正在编辑角色，无法选择菜单。
-                  </span>
-                </template>
+                <a-tree
+                  v-model:checked-keys="checkedIds"
+                  :checkable="true"
+                  :field-names="{
+                    key: 'id',
+                    icon: 'treeIcon',
+                  }"
+                  :check-strictly="true"
+                  :data="menuTree"
+                />
+              </div>
 
-                <div style="overflow-y: auto; height: 50vh; width: 100%">
-                  <a-tree
-                    v-model:checked-keys="checkedIds"
-                    :checkable="true"
-                    :field-names="{
-                      key: 'id',
-                      icon: 'treeIcon',
-                    }"
-                    :check-strictly="true"
-                    :data="menuTree"
-                  />
-                </div>
-
-                <template #extra>
-                  <a-button
-                    type="dashed"
-                    status="success"
-                    size="mini"
-                    :loading="saveRM.loading.value"
-                    @click="saveRoleMenu"
-                    ><template #icon><icon-check /></template>保存</a-button
-                  >
-                </template>
-              </a-card>
-            </div>
+              <template #extra>
+                <a-button
+                  type="dashed"
+                  status="success"
+                  size="mini"
+                  :loading="saveRM.loading.value"
+                  @click="saveRoleMenu"
+                  ><template #icon><icon-check /></template>保存</a-button
+                >
+              </template>
+            </a-card>
           </a-col>
         </a-row>
-      </a-space>
+      </div>
     </div>
   </div>
 </template>
@@ -772,15 +779,20 @@
 
 <style scoped>
   .container {
+    height: 100%;
     padding: 16px 20px;
     padding-bottom: 0;
     background-color: var(--color-fill-2);
   }
 
   .panel {
-    height: 80vh;
+    height: 100%;
     padding: 16px;
     background-color: var(--color-bg-2);
     border-radius: 4px;
+  }
+
+  :deep(.arco-card-body) {
+    height: 100%;
   }
 </style>
