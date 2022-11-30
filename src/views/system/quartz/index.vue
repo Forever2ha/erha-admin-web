@@ -251,7 +251,9 @@
                           v-for="(err, index) in record.updateErr"
                           :key="index"
                         >
-                          [{{ $t(`system.quartz.table.${err.errorField}`) }}]
+                          [{{
+                            $t(`${crud.options.title}.table.${err.errorField}`)
+                          }}]
                           {{ err.errorMsg }}
                           --->[{{ err.errorVal }}]
                         </a-list-item>
@@ -601,7 +603,7 @@
   const crud = useCrud<Quartz>({
     tag: '任务调度',
     url: '/quartz',
-    title: 'quartz',
+    title: 'system.quartz',
   });
   provide('crud', crud);
   // rangePicker的值改变

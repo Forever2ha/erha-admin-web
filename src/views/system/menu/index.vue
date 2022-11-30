@@ -261,9 +261,7 @@
                           :key="index"
                         >
                           [{{
-                            $t(
-                              `system.${crud.options.title}.table.${err.errorField}`
-                            )
+                            $t(`${crud.options.title}.table.${err.errorField}`)
                           }}]
                           {{ err.errorMsg }}
                           --->[{{ err.errorVal }}]
@@ -614,7 +612,7 @@
   const crud = useCrud<Menu>({
     tag: '菜单',
     url: '/menu',
-    title: 'menu',
+    title: 'system.menu',
     tableInfo: {
       componentConfig: {
         stripe: false,

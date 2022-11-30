@@ -205,7 +205,7 @@
                               >
                                 [{{
                                   $t(
-                                    `system.${crud.options.title}.table.${err.errorField}`
+                                    `${crud.options.title}.table.${err.errorField}`
                                   )
                                 }}]
                                 {{ err.errorMsg }}
@@ -550,7 +550,7 @@
   const crud = useCrud<Role>({
     tag: '角色',
     url: '/role',
-    title: 'role',
+    title: 'system.role',
     tableInfo: {
       componentConfig: {
         stripe: false,

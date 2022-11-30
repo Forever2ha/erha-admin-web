@@ -158,7 +158,9 @@
                           v-for="(err, index) in record.updateErr"
                           :key="index"
                         >
-                          [{{ $t(`system.job.table.${err.errorField}`) }}]
+                          [{{
+                            $t(`${crud.options.title}.table.${err.errorField}`)
+                          }}]
                           {{ err.errorMsg }}
                           --->[{{ err.errorVal }}]
                         </a-list-item>
@@ -269,7 +271,7 @@
   const crud = useCrud<Job>({
     tag: '岗位',
     url: '/job',
-    title: 'job',
+    title: 'system.job',
     tableInfo: {
       componentConfig: {
         stripe: false,

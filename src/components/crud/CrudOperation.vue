@@ -2,11 +2,10 @@
   <div ref="rootDiv">
     <a-row align="end">
       <a-col flex="auto">
-        <!--todo 新增窗口title前缀写死问题-->
         <a-modal
           v-model:visible="addVisible"
           :mask-closable="false"
-          :title="$t('crud.add') + $t('system.' + crud.options.title)"
+          :title="$t('crud.add') + $t(crud.options.title)"
           :popup-container="rootDiv"
           :width="650"
           @cancel="handleCancel"

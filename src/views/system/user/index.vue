@@ -326,7 +326,11 @@
                             v-for="(err, index) in record.updateErr"
                             :key="index"
                           >
-                            [{{ $t(`system.user.table.${err.errorField}`) }}]
+                            [{{
+                              $t(
+                                `${crud.options.title}.table.${err.errorField}`
+                              )
+                            }}]
                             {{ err.errorMsg }}
                             --->[{{ err.errorVal }}]
                           </a-list-item>
@@ -694,7 +698,7 @@
   const crud = useCrud<user>({
     tag: '用户',
     url: '/user',
-    title: 'user',
+    title: 'system.user',
   });
   provide('crud', crud);
   const instance = getCurrentInstance();

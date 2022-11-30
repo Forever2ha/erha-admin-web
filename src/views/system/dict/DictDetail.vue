@@ -17,9 +17,7 @@
     >
       <template #title>
         <a-space>
-          <span
-            >{{ $t('crud.add') + $t('system.' + crud.options.title) }}:</span
-          >
+          <span>{{ $t('crud.add') + $t(crud.options.title) }}:</span>
           <span style="color: rgb(var(--arcoblue-5))">{{ clickDictName }}</span>
         </a-space>
       </template>
@@ -220,9 +218,7 @@
                       :key="index"
                     >
                       [{{
-                        $t(
-                          `system.${crud.options.title}.table.${err.errorField}`
-                        )
+                        $t(`${crud.options.title}.table.${err.errorField}`)
                       }}]
                       {{ err.errorMsg }}
                       --->[{{ err.errorVal }}]
@@ -366,7 +362,7 @@
   const crud = useCrud<SingleDictDetail>({
     tag: '字典详情',
     url: '/dictDetail',
-    title: 'dictDetail',
+    title: 'system.dictDetail',
     tableInfo: {
       componentConfig: {
         stripe: false,

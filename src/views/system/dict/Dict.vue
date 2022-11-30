@@ -121,9 +121,7 @@
                         :key="index"
                       >
                         [{{
-                          $t(
-                            `system.${crud.options.title}.table.${err.errorField}`
-                          )
+                          $t(`${crud.options.title}.table.${err.errorField}`)
                         }}]
                         {{ err.errorMsg }}
                         --->[{{ err.errorVal }}]
@@ -233,7 +231,7 @@
   const crud = useCrud<DictModel>({
     tag: '字典',
     url: '/dict',
-    title: 'dict',
+    title: 'system.dict',
     tableInfo: {
       componentConfig: {
         stripe: false,

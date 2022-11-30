@@ -193,7 +193,9 @@
                           v-for="(err, index) in record.updateErr"
                           :key="index"
                         >
-                          [{{ $t(`system.dept.table.${err.errorField}`) }}]
+                          [{{
+                            $t(`${crud.options.title}.table.${err.errorField}`)
+                          }}]
                           {{ err.errorMsg }}
                           --->[{{ err.errorVal }}]
                         </a-list-item>
@@ -412,7 +414,7 @@
   const crud = useCrud<Role>({
     tag: '部门',
     url: '/dept',
-    title: 'dept',
+    title: 'system.dept',
     tableInfo: {
       componentConfig: {
         stripe: false,

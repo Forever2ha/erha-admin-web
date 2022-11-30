@@ -122,7 +122,7 @@
   const crud = useCrud<QuartzLog>({
     tag: '任务执行日志',
     url: '/quartzLog',
-    title: 'quartzLog',
+    title: 'system.quartzLog',
     tableInfo: {
       componentConfig: {
         checkbox: false,
