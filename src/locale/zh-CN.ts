@@ -7,6 +7,8 @@ import locale500 from '@/views/exception/500/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 import localeSystem from '@/views/system/locale/zh-CN';
 import localeCrud from '@/components/crud/locale/zh-CN';
+import localeTools from '@/views/tools/locale/zh-CN';
+import localeTest from '@/views/test/locale/zh-CN';
 
 import localeSettings from './zh-CN/settings';
 
@@ -35,4 +37,6 @@ export default {
   ...localeWorkplace,
   ...localeSystem,
   ...localeCrud,
+  ...localeTools,
+  ...localeTest,
 };

@@ -21,55 +21,63 @@ body {
     rgba(244, 247, 252, 0.6) 85.2%
   ) !important;
   border: none !important;
-  backdrop-filter: blur(10px) !important;
+
   /* Note: backdrop-filter has minimal browser support */
 
   border-radius: 6px !important;
+  backdrop-filter: blur(10px) !important;
+
   .content-panel {
     display: flex;
     justify-content: space-between;
-    padding: 0 9px;
-    background: rgba(255, 255, 255, 0.8);
     width: 164px;
     height: 32px;
-    line-height: 32px;
-    box-shadow: 6px 0px 20px rgba(34, 87, 188, 0.1);
-    border-radius: 4px;
     margin-bottom: 4px;
+    padding: 0 9px;
+    line-height: 32px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    box-shadow: 6px 0 20px rgba(34, 87, 188, 0.1);
   }
+
   .tooltip-title {
     margin: 0 0 10px 0;
   }
+
   p {
     margin: 0;
   }
+
   .tooltip-title,
   .tooltip-value {
-    font-size: 13px;
-    line-height: 15px;
     display: flex;
     align-items: center;
-    text-align: right;
     color: #1d2129;
     font-weight: bold;
+    font-size: 13px;
+    line-height: 15px;
+    text-align: right;
   }
+
   .tooltip-item-icon {
     display: inline-block;
-    margin-right: 8px;
     width: 10px;
     height: 10px;
+    margin-right: 8px;
     border-radius: 50%;
   }
 }
 
 .general-card {
-  border-radius: 4px;
   border: none;
+  border-radius: 4px;
+
   & > .arco-card-header {
     height: auto;
     padding: 20px;
     border: none;
   }
+
   & > .arco-card-body {
     padding: 0 20px 20px 20px;
   }
@@ -82,13 +90,50 @@ body {
 .arco-table-cell {
   .circle {
     display: inline-block;
-    margin-right: 4px;
     width: 6px;
     height: 6px;
-    border-radius: 50%;
+    margin-right: 4px;
     background-color: rgb(var(--blue-6));
+    border-radius: 50%;
+
     &.pass {
       background-color: rgb(var(--green-6));
     }
   }
+}
+
+/* 语法高亮 */
+.hljs-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  padding-left: 10px;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: left;
+  background: rgb(var(--arcoblue-1));
+
+  pre {
+    width: 100%;
+    margin: 0;
+
+    code {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+  }
+}
+
+/** 行数样式 */
+.hljs-code-number {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 6px 0;
+  color: rgb(var(--orange-5));
+  font-size: 12px;
+  text-align: end;
+  list-style: none;
+  border-right: 1px solid #d1d8e6;
 }

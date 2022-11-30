@@ -27,7 +27,7 @@ const router = createRouter({
     {
       path: '/test',
       name: 'test',
-      component: () => import('@/views/test/index.vue'),
+      component: () => import('@/views/test/student/index.vue'),
       meta: {
         requiresAuth: false,
       },

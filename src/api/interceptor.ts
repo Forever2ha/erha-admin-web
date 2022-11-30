@@ -40,11 +40,12 @@ let hasWarningModal = false;
 // add response interceptors
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
-    const res = response.data;
-    // 放行excel下载的文件
+    let res = response.data;
+    // 放行excel,zip下载的文件
     if (
       (response.data as any).type ===
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      (response.data as any).type === 'application/octet-stream'
     ) {
       return res;
     }
@@ -60,10 +61,24 @@ axios.interceptors.response.use(
         return Promise.reject(new Error((res.data as string) || 'Error'));
       }
 
-      Message.error({
-        content: `${res.msg}:${response.request.responseURL}` || 'Error',
-        duration: 5 * 1000,
-      });
+      // blob下载失败后返回json
+      if ((res as any).type === 'application/json') {
+        const reader = new FileReader(); // 创建一个FileReader实例
+        reader.readAsText(res as any, 'utf-8'); // 读取文件,结果用字符串形式表示
+        reader.onload = () => {
+          // 读取完成后,**获取reader.result**
+          res = JSON.parse((reader as any).result);
+          Message.error({
+            content: res.msg,
+            duration: 5 * 1000,
+          });
+        };
+      } else {
+        Message.error({
+          content: `${res.msg}:${response.request.responseURL}` || 'Error',
+          duration: 5 * 1000,
+        });
+      }
 
       // 40005:token过期或者不存在
 

@@ -7,6 +7,8 @@ import locale500 from '@/views/exception/500/locale/en-US';
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 import localeSystem from '@/views/system/locale/en-US';
 import localeCrud from '@/components/crud/locale/en-US';
+import localeTools from '@/views/tools/locale/en-US';
+import localeTest from '@/views/test/locale/en-US';
 
 import localeSettings from './en-US/settings';
 
@@ -35,4 +37,6 @@ export default {
   ...localeWorkplace,
   ...localeSystem,
   ...localeCrud,
+  ...localeTools,
+  ...localeTest,
 };

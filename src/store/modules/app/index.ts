@@ -77,11 +77,6 @@ const useAppStore = defineStore('app', {
         });
 
         this.serverMenu = data;
-        notifiInstance = Notification.success({
-          id: 'menuNotice',
-          content: '获取菜单成功！',
-          closable: true,
-        });
       } catch (error) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         notifiInstance = Notification.error({
