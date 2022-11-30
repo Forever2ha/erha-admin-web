@@ -1,18 +1,16 @@
 import localeMessageBox from '@/components/message-box/locale/en-US';
-import localeLogin from '@/views/login/locale/en-US';
 import locale403 from '@/views/exception/403/locale/en-US';
 import locale404 from '@/views/exception/404/locale/en-US';
 import locale500 from '@/views/exception/500/locale/en-US';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
-import localeSystem from '@/views/system/locale/en-US';
+
 import localeCrud from '@/components/crud/locale/en-US';
-import localeTools from '@/views/tools/locale/en-US';
-import localeTest from '@/views/test/locale/en-US';
 
 import localeSettings from './en-US/settings';
 
-export default {
+// eslint-disable-next-line import/no-mutable-exports
+let localeEN = {
   '': '',
   'menu.dashboard': 'Dashboard',
   'menu.system': 'System Control',
@@ -30,13 +28,19 @@ export default {
   'navbar.action.locale': 'Switch to English',
   ...localeSettings,
   ...localeMessageBox,
-  ...localeLogin,
   ...locale403,
   ...locale404,
   ...locale500,
   ...localeWorkplace,
-  ...localeSystem,
   ...localeCrud,
-  ...localeTools,
-  ...localeTest,
 };
+
+// 自动导入views/*/locale/ 下面的文件
+const modules = import.meta.globEager('../views/*/locale/en-US.ts');
+Object.keys(modules).forEach((key) => {
+  const defaultModule = modules[key].default;
+  if (!defaultModule) return;
+  localeEN = { ...localeEN, ...defaultModule };
+});
+
+export default localeEN;
