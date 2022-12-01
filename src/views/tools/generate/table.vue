@@ -10,12 +10,7 @@
         />
       </a-col>
       <a-col flex="90px">
-        <a-button status="success">
-          <template #icon>
-            <icon-search />
-          </template>
-          搜索</a-button
-        >
+        <RROperation />
       </a-col>
       <a-col flex="auto"> </a-col>
       <a-col flex="100px">
@@ -87,6 +82,7 @@
   import { useI18n } from 'vue-i18n';
   import axios from 'axios';
   import { parseTime } from '@/utils';
+  import RROperation from '@/components/crud/RROperation.vue';
 
   const { t } = useI18n();
   const crud = useCrud<Table>({
