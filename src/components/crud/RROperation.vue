@@ -1,5 +1,5 @@
 <template>
-  <a-space size="medium">
+  <a-space size="medium" :direction="props.direction">
     <a-button
       status="success"
       long
@@ -29,10 +29,12 @@
     defineProps<{
       enabledReset?: boolean;
       enabledSearch?: boolean;
+      direction?: 'horizontal' | 'vertical';
     }>(),
     {
       enabledReset: true,
       enabledSearch: true,
+      direction: 'horizontal',
     }
   );
 </script>
