@@ -65,6 +65,7 @@
           <a-link @click="config(record)">配置</a-link>
           <a-link @click="preview(record)">预览</a-link>
           <a-link @click="download(record)">下载</a-link>
+          <a-link :loading="loading" @click="generate(record)">生成</a-link>
         </a-space>
       </template>
     </a-table>
@@ -77,13 +78,22 @@
 <script lang="ts" setup>
   import { useCrud, CrudStatus } from '@/components/crud/CRUD';
   import { Table } from '@/api/tools/generate';
-  import { computed, inject, onMounted, provide } from 'vue';
+  import {
+    computed,
+    getCurrentInstance,
+    inject,
+    onMounted,
+    provide,
+  } from 'vue';
   import Pagination from '@/components/crud/Pagination.vue';
   import { useI18n } from 'vue-i18n';
   import axios from 'axios';
   import { parseTime } from '@/utils';
   import RROperation from '@/components/crud/RROperation.vue';
+  import useLoading from '@/hooks/loading';
 
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
   const { t } = useI18n();
   const crud = useCrud<Table>({
     url: 'generate/table',
@@ -180,6 +190,30 @@
       .then((data) => downloadFile(data, r.tableName, 'zip'))
       .catch(() => {});
   };
+
+  const { loading, toggle } = useLoading(false);
+  const generate = async (r: any) => {
+    toggle();
+    try {
+      const res = await axios.get(`/generate?tableName=${r.tableName}`);
+      if ((res as any).code === 20000) {
+        global.$message.success('生成成功！');
+      } else {
+        global.$message.error(`生成失败:${(res as any).msg}`);
+      }
+      const res2 = await axios.post(`/menu/generate/${r.tableName}`);
+      if ((res2 as any).code === 20000) {
+        global.$message.success('菜单集成成功！');
+      } else {
+        global.$message.error(`菜单集成失败:${(res as any).msg}`);
+      }
+      // eslint-disable-next-line no-empty
+    } catch (e) {
+    } finally {
+      toggle();
+    }
+  };
+  info.gen = generate;
 
   onMounted(() => {
     crud.method.refresh();

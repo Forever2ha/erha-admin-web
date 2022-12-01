@@ -121,7 +121,12 @@
                     @click="info.show = 3"
                     >预览</a-button
                   >
-                  <a-button type="outline">生成</a-button>
+                  <a-button
+                    type="outline"
+                    :loading="generateL.loading.value"
+                    @click="generate"
+                    >生成</a-button
+                  >
                 </a-space>
               </template>
               <a-typography
@@ -129,8 +134,12 @@
               >
                 <a-typography-paragraph>注意:</a-typography-paragraph>
                 <ul>
-                  <li>生成后请手动在【菜单管理】中添加菜单</li>
-                  <li>有任何问题请加QQ群或者提issue</li>
+                  <li
+                    >生成前请确保 [erha-admin-main] [erha-admin-web]
+                    在同一个目录下，否则前端生成文件位置会失败！</li
+                  >
+                  <li>生成后菜单已经自动添加，重启后端即可</li>
+                  <li>有任何问题请加QQ群【727793103】或者提issue</li>
                 </ul>
               </a-typography>
             </a-result>
@@ -263,6 +272,13 @@
     } else {
       global.$message.error('同步失败');
     }
+  };
+
+  const generateL = useLoading(false);
+  const generate = async () => {
+    generateL.toggle();
+    await info.gen(info.table);
+    generateL.toggle();
   };
 </script>
 
