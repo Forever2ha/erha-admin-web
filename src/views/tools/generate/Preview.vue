@@ -4,14 +4,14 @@
       <a-button @click="info.show = 1">退出</a-button>
     </template>
     <a-tab-pane
-      v-for="(code, index) in code"
+      v-for="(c, index) in code"
       :key="index"
-      :title="code.name"
+      :title="c.name"
       style="height: 100%"
     >
       <Code
-        :code="code.content"
-        :lang="code.content.startsWith('package') ? 'java' : ''"
+        :code="c.content"
+        :lang="c.content.startsWith('package') ? 'java' : ''"
         style="height: 100%"
       />
     </a-tab-pane>
