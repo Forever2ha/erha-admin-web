@@ -23,15 +23,6 @@ const router = createRouter({
         requiresAuth: false,
       },
     },
-    // 测试
-    {
-      path: '/test',
-      name: 'test',
-      component: () => import('@/views/test/student/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
-    },
     ...appRoutes,
     {
       path: '/403Forbidden',

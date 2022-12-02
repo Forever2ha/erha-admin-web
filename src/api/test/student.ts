@@ -1,6 +1,6 @@
 export interface TestStudent {
-  studentId: number;
   name: string;
+  likeFood: string;
   age: number;
   clazzName: string;
   gender: boolean;
