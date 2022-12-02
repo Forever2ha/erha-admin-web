@@ -26,7 +26,7 @@
           <slot name="left" />
           <!--新增,修改,删除,下载-->
           <a-button
-            v-if="!crud.options.tableInfo.isEdit"
+            v-if="!crud.options.tableInfo.isEdit && props.showAdd"
             v-permission="props.addPermission"
             :disabled="!props.enabledAdd || disableAll"
             type="outline"
@@ -39,7 +39,7 @@
             {{ $t('crud.add') }}
           </a-button>
           <a-button
-            v-if="!crud.options.tableInfo.isEdit"
+            v-if="!crud.options.tableInfo.isEdit && props.showEdit"
             v-permission="props.editPermission"
             :disabled="
               crud.options.tableInfo.selectKeys.length === 0 ||
@@ -62,7 +62,7 @@
             @ok="crud.update.setStatus(CrudStatus.NEED_DELETE)"
           >
             <a-button
-              v-if="!crud.options.tableInfo.isEdit"
+              v-if="!crud.options.tableInfo.isEdit && props.showDel"
               v-permission="props.delPermission"
               :disabled="
                 crud.options.tableInfo.selectKeys.length === 0 ||
@@ -82,7 +82,7 @@
           </a-popconfirm>
 
           <a-button
-            v-if="!crud.options.tableInfo.isEdit"
+            v-if="!crud.options.tableInfo.isEdit && props.showDownload"
             v-permission="props.downloadPermission"
             type="outline"
             size="small"
@@ -228,6 +228,10 @@
 
   const props = withDefaults(
     defineProps<{
+      showAdd?: boolean;
+      showEdit?: boolean;
+      showDel?: boolean;
+      showDownload?: boolean;
       enabledAdd?: boolean;
       enabledEdit?: boolean;
       enabledDel?: boolean;
@@ -242,6 +246,10 @@
       downloadPermission?: string[];
     }>(),
     {
+      showAdd: true,
+      showEdit: true,
+      showDel: true,
+      showDownload: true,
       enabledAdd: true,
       enabledEdit: true,
       enabledDel: true,
