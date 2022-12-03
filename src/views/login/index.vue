@@ -1,10 +1,7 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img
-        alt="logo"
-        src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-      />
+      <img alt="logo" src="../../assets/logo.png" width="30" />
       <div class="logo-text">erha-admin</div>
     </div>
     <LoginBanner />
@@ -32,7 +29,11 @@
 
     .banner {
       width: 550px;
-      background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
+      background: linear-gradient(
+        to left bottom,
+        hsl(113, 100%, 85%) 0%,
+        hsl(10, 100%, 85%) 100%
+      );
     }
 
     .content {

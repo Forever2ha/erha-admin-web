@@ -61,7 +61,8 @@
         </a-input>
         <img
           :src="imgSrc"
-          style="height: 36px; width: 136px; cursor: pointer"
+          style="height: 32px; padding-left: 10px; cursor: pointer"
+          width="150"
           alt="验证码加载失败"
           @click="getCode"
         />
