@@ -16,5 +16,13 @@ export default {
         locale: 'menu.monitor.onlineuser',
       },
     },
+    {
+      path: 'log',
+      name: 'Log',
+      component: () => import('@/views/monitor/log/index.vue'),
+      meta: {
+        locale: 'menu.monitor.log',
+      },
+    },
   ],
 };
