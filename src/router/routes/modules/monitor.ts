@@ -24,5 +24,13 @@ export default {
         locale: 'menu.monitor.log',
       },
     },
+    {
+      path: 'server',
+      name: 'Server',
+      component: () => import('@/views/monitor/server/index.vue'),
+      meta: {
+        locale: 'menu.monitor.server',
+      },
+    },
   ],
 };
