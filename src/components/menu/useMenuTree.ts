@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { useRouter, RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
+import { RouteRecordNormalized, RouteRecordRaw, useRouter } from 'vue-router';
 import usePermission from '@/hooks/permission';
 import { useAppStore } from '@/store';
 
@@ -51,17 +51,7 @@ export default function useMenuTree() {
         );
 
         // Associated child node
-        const subItem = travel(element.children, layer + 1);
-
-        if (subItem.length) {
-          element.children = subItem;
-          return element;
-        }
-        // the else logic
-        if (layer > 1) {
-          element.children = subItem;
-          return element;
-        }
+        element.children = travel(element.children, layer + 1);
 
         if (element.meta?.hideInMenu === false) {
           return element;
@@ -69,11 +59,11 @@ export default function useMenuTree() {
 
         return null;
       });
+
       return collector.filter(Boolean);
     }
     return travel(copyRouter, 0);
   });
-
   return {
     menuTree,
   };

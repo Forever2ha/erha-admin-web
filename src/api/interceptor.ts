@@ -41,6 +41,13 @@ let hasWarningModal = false;
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     let res = response.data;
+
+    if (res.code === 50000) {
+      window.location.href = '/500InternalError';
+      localStorage.setItem('exception', res.data as string);
+      return res;
+    }
+
     // 放行excel,zip下载的文件
     if (
       (response.data as any).type ===
@@ -80,7 +87,7 @@ axios.interceptors.response.use(
         });
       }
 
-      // 40005:token过期或者不存在
+      // 40005:token过期或者不存在或者无效
 
       if (!tokenValid) {
         if (!hasWarningModal) {

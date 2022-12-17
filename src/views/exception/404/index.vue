@@ -9,10 +9,14 @@
       >
       </a-result>
       <div class="operation-row">
-        <a-button key="again" style="margin-right: 16px">
+        <a-button
+          key="again"
+          style="margin-right: 16px"
+          @click="$router.push({ path: lastRoute.fullPath })"
+        >
           {{ $t('exception.result.404.retry') }}
         </a-button>
-        <a-button key="back" type="primary">
+        <a-button key="back" type="primary" @click="$router.go(-1)">
           {{ $t('exception.result.404.back') }}
         </a-button>
       </div>
@@ -20,7 +24,17 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import { listenerRouteChange } from '@/utils/route-listener';
+  import { ref } from 'vue';
+
+  const lastRoute = ref({});
+
+  listenerRouteChange((route) => {
+    console.log(route);
+    lastRoute.value = route;
+  });
+</script>
 
 <script lang="ts">
   export default {
@@ -30,8 +44,9 @@
 
 <style scoped lang="less">
   .container {
-    padding: 0 20px 20px 20px;
     height: calc(100% - 40px);
+    padding: 0 20px 20px 20px;
+
     :deep(.content) {
       position: relative;
       display: flex;

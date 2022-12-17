@@ -6,6 +6,7 @@ export default function usePermission() {
   return {
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
       return (
+        userStore.nowRole === '超级管理员' || // 超级管理员放行
         !route.meta?.requiresAuth || // 不需要权限放行
         !route.meta?.roles || // 不需要角色放行
         route.meta?.roles?.includes('*') || // 所有角色放行

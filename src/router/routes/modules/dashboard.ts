@@ -9,6 +9,7 @@ export default {
     requiresAuth: true,
     icon: 'icon-dashboard',
     order: 0,
+    hideInMenu: false,
   },
   children: [
     {
@@ -19,6 +20,7 @@ export default {
         locale: 'menu.dashboard.workplace',
         requiresAuth: true,
         roles: ['*'],
+        hideInMenu: false,
       },
     },
   ],

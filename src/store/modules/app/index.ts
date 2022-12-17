@@ -47,41 +47,35 @@ const useAppStore = defineStore('app', {
     async fetchServerMenuConfig() {
       let notifiInstance: NotificationReturn | null = null;
       try {
-        notifiInstance = Notification.info({
-          id: 'menuNotice', // Keep the instance id the same
-          content: 'loading',
-          closable: true,
-        });
         const { data } = await getMenuList();
 
         (data as any[]).unshift({
-          path: '/dashboard',
           name: 'dashboard',
           meta: {
             locale: 'menu.dashboard',
             requiresAuth: true,
             icon: 'icon-dashboard',
+            hideInMenu: false,
             order: 0,
           },
           children: [
             {
-              path: 'workplace',
               name: 'Workplace',
               meta: {
                 locale: 'menu.dashboard.workplace',
                 requiresAuth: true,
+                hideInMenu: false,
                 roles: ['*'],
               },
             },
           ],
         });
-
         this.serverMenu = data;
       } catch (error) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         notifiInstance = Notification.error({
           id: 'menuNotice',
-          content: 'error',
+          content: '获取菜单失败！',
           closable: true,
         });
       }
