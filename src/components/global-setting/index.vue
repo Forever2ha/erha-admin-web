@@ -37,7 +37,6 @@
   const { copy } = useClipboard();
   const visible = computed(() => appStore.globalSettings);
   const contentOpts = computed(() => [
-    { name: 'settings.navbar', key: 'navbar', defaultVal: appStore.navbar },
     {
       name: 'settings.menu',
       key: 'menu',
@@ -45,11 +44,6 @@
     },
     { name: 'settings.footer', key: 'footer', defaultVal: appStore.footer },
     { name: 'settings.tabBar', key: 'tabBar', defaultVal: appStore.tabBar },
-    {
-      name: 'settings.menuFromServer',
-      key: 'menuFromServer',
-      defaultVal: appStore.menuFromServer,
-    },
     {
       name: 'settings.menuWidth',
       key: 'menuWidth',

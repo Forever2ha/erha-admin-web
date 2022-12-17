@@ -101,6 +101,7 @@
   import { LoginData, getCaptcha } from '@/api/user';
   import encrypt from '@/utils/RsaUtils';
   import app from '@/store/modules/app';
+  import { mergeMetaInfo } from '@/router/guard/permission';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -159,6 +160,14 @@
 
         await userStore.login(values);
         await appStore.fetchServerMenuConfig();
+        // 重新组织router路由的meta信息
+        mergeMetaInfo(
+          router.options.routes,
+          appStore.appServerMenuConfig as any,
+          null,
+          router
+        );
+
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
 
         router.push({

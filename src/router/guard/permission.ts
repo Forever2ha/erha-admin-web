@@ -12,7 +12,7 @@ const whiteList = [
   { name: '500InternalError', children: [], meta: { roles: ['*'] } },
   { name: 'Setting', children: [], meta: { roles: ['*'] } },
 ];
-function mergeMetaInfo(
+export function mergeMetaInfo(
   source: any[],
   des: any[],
   parent: any | null,
