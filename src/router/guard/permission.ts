@@ -10,6 +10,7 @@ const whiteList = [
   { name: 'login', children: [], meta: { roles: ['*'] } },
   { name: '403Forbidden', children: [], meta: { roles: ['*'] } },
   { name: '500InternalError', children: [], meta: { roles: ['*'] } },
+  { name: 'Setting', children: [], meta: { roles: ['*'] } },
 ];
 function mergeMetaInfo(
   source: any[],
@@ -108,7 +109,6 @@ export default function setupPermissionGuard(router: Router) {
     }
 
     const serverMenuConfig = [...appStore.appServerMenuConfig, ...whiteList];
-
     let hasPermission = false;
     while (serverMenuConfig.length) {
       const element = serverMenuConfig.shift();

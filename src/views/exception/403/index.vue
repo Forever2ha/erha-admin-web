@@ -7,7 +7,7 @@
         status="403"
         :subtitle="$t('exception.result.403.description')"
       />
-      <a-button key="back" type="primary">
+      <a-button key="back" type="primary" @click="$router.go(-1)">
         {{ $t('exception.result.403.back') }}
       </a-button>
     </div>
@@ -24,8 +24,9 @@
 
 <style scoped lang="less">
   .container {
-    padding: 0 20px 20px 20px;
     height: calc(100% - 40px);
+    padding: 0 20px 20px 20px;
+
     :deep(.content) {
       position: relative;
       display: flex;
