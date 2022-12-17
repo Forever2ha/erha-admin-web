@@ -76,7 +76,8 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {t(element?.meta?.locale || '')}
+                    {`${t(element?.meta?.locale || '')}  `}
+                    {element?.path ? <icon-launch size="15" /> : ''}
                   </a-menu-item>
                 );
               nodes.push(node as never);
@@ -111,6 +112,7 @@
       display: flex;
       align-items: center;
     }
+
     .arco-icon {
       &:not(.arco-icon-down) {
         font-size: 18px;
