@@ -613,6 +613,12 @@
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Project',
+  };
+</script>
+
 <style scoped>
   .container {
     height: 100%;

@@ -19,6 +19,12 @@
   import DictDetail from '@/views/system/dict/DictDetail.vue';
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Dict',
+  };
+</script>
+
 <style scoped>
   .container {
     height: 100%;

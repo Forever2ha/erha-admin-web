@@ -20,6 +20,12 @@
   provide('info', info);
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Generate',
+  };
+</script>
+
 <style scoped>
   .fade-enter-active,
   .fade-leave-active {

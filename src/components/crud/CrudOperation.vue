@@ -158,7 +158,7 @@
               style="
                 width: 150px;
                 padding: 15px 10px;
-                background-color: white;
+                background-color: var(--color-bg-1);
                 box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
               "
             >
@@ -193,7 +193,7 @@
               style="
                 width: 150px;
                 padding: 15px 10px;
-                background-color: white;
+                background-color: var(--color-bg-1);
                 box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
               "
             >
