@@ -92,7 +92,7 @@
         v-model="form[record.columnId].dictName"
         placeholder="请选择"
         :default-value="record.dictName"
-        v
+        allow-search
       >
         <a-option value=""> 空 </a-option>
         <a-option v-for="dict in dictInfo" :key="dict.id">
