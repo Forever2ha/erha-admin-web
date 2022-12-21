@@ -41,6 +41,7 @@
                       <a-select
                         v-model="crud.options.query.enabled"
                         placeholder="输入状态搜索"
+
                       >
                         <a-option
                           v-for="s in dict.user_status"
@@ -58,7 +59,7 @@
           </a-col>
           <a-divider style="height: 84px" direction="vertical" />
           <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical" />
+            <RROperation direction="vertical"/>
           </a-col>
         </a-row>
         <a-divider style="margin-top: 0" />
@@ -73,13 +74,19 @@
             <a-row :gutter="12">
               <!--项目名称-->
               <a-col :span="12">
-                <a-form-item field="pname" label="项目名称">
+                <a-form-item
+                  field="pname"
+                  label="项目名称"
+                >
                   <a-input v-model="crud.options.form.pname" />
                 </a-form-item>
               </a-col>
               <!--项目计划开始日期-->
               <a-col :span="12">
-                <a-form-item field="planStartDate" label="项目计划开始日期">
+                <a-form-item
+                  field="planStartDate"
+                  label="项目计划开始日期"
+                >
                   <a-date-picker
                     v-model="crud.options.form.planStartDate"
                     show-time
@@ -90,7 +97,10 @@
               </a-col>
               <!--项目计划结束日期-->
               <a-col :span="12">
-                <a-form-item field="planFinishDate" label="项目计划结束日期">
+                <a-form-item
+                  field="planFinishDate"
+                  label="项目计划结束日期"
+                >
                   <a-date-picker
                     v-model="crud.options.form.planFinishDate"
                     show-time
@@ -101,7 +111,10 @@
               </a-col>
               <!--实际开始日期-->
               <a-col :span="12">
-                <a-form-item field="actuStartDate" label="实际开始日期">
+                <a-form-item
+                  field="actuStartDate"
+                  label="实际开始日期"
+                >
                   <a-date-picker
                     v-model="crud.options.form.actuStartDate"
                     show-time
@@ -112,7 +125,10 @@
               </a-col>
               <!--实际结束日期-->
               <a-col :span="12">
-                <a-form-item field="actuFinishDate" label="实际结束日期">
+                <a-form-item
+                  field="actuFinishDate"
+                  label="实际结束日期"
+                >
                   <a-date-picker
                     v-model="crud.options.form.actuFinishDate"
                     show-time
@@ -123,11 +139,11 @@
               </a-col>
               <!--状态-->
               <a-col :span="12">
-                <a-form-item field="enabled" label="状态">
-                  <a-radio-group
-                    v-model="crud.options.form.enabled"
-                    type="button"
-                  >
+                <a-form-item
+                  field="enabled"
+                  label="状态"
+                >
+                  <a-radio-group v-model="crud.options.form.enabled">
                     <a-radio
                       v-for="s in dict.user_status"
                       :key="s.detailId"
@@ -395,44 +411,27 @@
 
           <!--状态-->
           <template #enabled="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ dict.user_status ? (dict.user_status.filter((di: any) => di.value === (record.enabled ? '1' : '0') || di.value === (record.enabled + '')))[0].label : ''}}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ dict.user_status ? (dict.user_status.filter((di: any) => di.value === (record.enabled ? '1' : '0') || di.value === (record.enabled + '')))[0].label : '' }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].enabled
-                   ? dict.user_status ? (dict.user_status.filter((di: any) => di.value === (crud.options.form[record.id].enabled ? '1' : '0') || di.value === (record.enabled + '')))[0].label : ''
-                   : dict.user_status ? (dict.user_status.filter((di: any) => di.value === (record.enabled ? '1' : '0') || di.value === (record.enabled + '')))[0].label : ''
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-select
-                v-model="crud.options.form[record.id].enabled"
-                :default-value="record.enabled ? '1' : '0'"
+            <div>
+              <a-switch
+                v-model="record.enabled"
+                :loading="enabled.loading.value"
+                @change="enableEnabledChange(record)"
               >
-                <a-option
-                  v-for="s in dict.user_status.map((di) => {
-                    if (di.value === 'true') di.value = '1';
-                    if (di.value === 'false') di.value = '0';
-                    return di;
-                  })"
-                  :key="s.detailId"
-                  :value="s.value"
-                  >{{ s.label }}
-                </a-option>
-              </a-select>
+                <template #checked>{{
+                  dict.user_status
+                    ? dict.user_status.filter(
+                        (di) => di.value === '1' || di.value === 'true'
+                    )[0].label
+                    : ''
+                }}</template>
+                <template #unchecked>{{
+                  dict.user_status
+                    ? dict.user_status.filter(
+                        (di) => di.value === '0' || di.value === 'false'
+                      )[0].label
+                    : ''
+                }}</template>
+              </a-switch>
             </div>
           </template>
         </a-table>
@@ -450,9 +449,10 @@
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import { useDict } from '@/components/dict';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
-  import RROperation from '@/components/crud/RROperation.vue';
+  import RROperation from '@/components/crud/RROperation.vue'
   import Pagination from '@/components/crud/Pagination.vue';
   import axios from 'axios';
+  import useLoading from '@/hooks/loading';
   import { useI18n } from 'vue-i18n';
 
   const { t } = useI18n();
@@ -467,6 +467,8 @@
     },
   });
   provide('crud', crud);
+
+
 
   // 字典
   const dict = useDict('user_status');
@@ -568,7 +570,7 @@
     {
       title: '状态',
       dataIndex: 'enabled',
-      width: 150,
+      width: 100,
       display: true,
       slotName: 'enabled',
       tooltip: true,
@@ -580,6 +582,23 @@
   });
 
   // region    ↓-------------------------------- switch --------------------------------↓
+  // 状态loading
+  const enabled = useLoading();
+  // 状态状态改变
+  const enableEnabledChange = async (record: any) => {
+    enabled.toggle();
+    const data = (await axios.put(crud.options.url, [
+      { id: record.id, enabled: record.enabled },
+    ])) as any;
+    if (data.code === 20000) {
+      global.$notification.success('更改成功');
+    } else {
+      global.$notification.warning(`更改失败:${data.msg}`);
+      record.enabled = !record.enabled;
+    }
+    enabled.toggle();
+  };
+
   // endregion ↑-------------------------------- switch --------------------------------↑
 
   // region    ↓-------------------------------- rangePicker --------------------------------↓
@@ -589,6 +608,7 @@
   onMounted(() => {
     crud.method.refresh();
   });
+
 
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>

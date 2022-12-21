@@ -10,5 +10,10 @@ export default {
       name: 'Project',
       component: () => import('@/views/operation/project/index.vue'),
     },
+    {
+        path: 'Server',
+        name: 'Server',
+        component: () => import('@/views/operation/server/index.vue'),
+    },
   ],
 };
