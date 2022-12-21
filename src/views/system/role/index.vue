@@ -777,6 +777,12 @@
   };
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Role',
+  };
+</script>
+
 <style scoped>
   .container {
     height: 100%;

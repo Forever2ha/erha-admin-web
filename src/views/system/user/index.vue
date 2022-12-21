@@ -954,6 +954,12 @@
   });
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'User',
+  };
+</script>
+
 <style scoped lang="less">
   .container {
     padding: 16px 20px;

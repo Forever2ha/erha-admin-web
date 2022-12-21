@@ -897,6 +897,12 @@
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Menu',
+  };
+</script>
+
 <style scoped>
   .container {
     height: 100%;

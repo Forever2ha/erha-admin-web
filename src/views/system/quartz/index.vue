@@ -783,6 +783,12 @@
   // endregion ↑-------------------------------- hook --------------------------------↑
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Quartz',
+  };
+</script>
+
 <style scoped>
   .container {
     height: 100%;

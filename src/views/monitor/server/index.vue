@@ -273,6 +273,12 @@
   });
 </script>
 
+<script lang="ts">
+  export default {
+    name: 'Server',
+  };
+</script>
+
 <style scoped>
   .container {
     display: flex;
