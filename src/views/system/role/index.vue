@@ -497,7 +497,7 @@
                     key: 'id',
                     icon: 'treeIcon',
                   }"
-                  :check-strictly="true"
+                  :check-strictly="false"
                   :data="menuTree"
                 />
               </div>
