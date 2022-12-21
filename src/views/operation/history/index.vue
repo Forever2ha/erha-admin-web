@@ -17,29 +17,23 @@
           </a-col>
         </a-row>
         <CrudOperation
-          :add-permission="['oraDeployHistory:add']"
-          :edit-permission="['oraDeployHistory:edit']"
-          :del-permission="['oraDeployHistory:del']"
-          :download-permission="['oraDeployHistory:list']"
+          :add-permission="['operation:oraDeployHistory:add']"
+          :edit-permission="['operation:oraDeployHistory:edit']"
+          :del-permission="['operation:oraDeployHistory:del']"
+          :download-permission="['operation:oraDeployHistory:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
             <a-row :gutter="12">
               <!--应用名称-->
               <a-col :span="12">
-                <a-form-item
-                  field="appName"
-                  label="应用名称"
-                >
+                <a-form-item field="appName" label="应用名称">
                   <a-input v-model="crud.options.form.appName" />
                 </a-form-item>
               </a-col>
               <!--部署日期-->
               <a-col :span="12">
-                <a-form-item
-                  field="deployDate"
-                  label="部署日期"
-                >
+                <a-form-item field="deployDate" label="部署日期">
                   <a-date-picker
                     v-model="crud.options.form.deployDate"
                     show-time
@@ -50,37 +44,25 @@
               </a-col>
               <!--部署用户-->
               <a-col :span="12">
-                <a-form-item
-                  field="deployUser"
-                  label="部署用户"
-                >
+                <a-form-item field="deployUser" label="部署用户">
                   <a-input v-model="crud.options.form.deployUser" />
                 </a-form-item>
               </a-col>
               <!--服务器IP-->
               <a-col :span="12">
-                <a-form-item
-                  field="ip"
-                  label="服务器IP"
-                >
+                <a-form-item field="ip" label="服务器IP">
                   <a-input v-model="crud.options.form.ip" />
                 </a-form-item>
               </a-col>
               <!--部署编号-->
               <a-col :span="12">
-                <a-form-item
-                  field="deployId"
-                  label="部署编号"
-                >
+                <a-form-item field="deployId" label="部署编号">
                   <a-input-number v-model="crud.options.form.deployId" />
                 </a-form-item>
               </a-col>
               <!--项目ID-->
               <a-col :span="12">
-                <a-form-item
-                  field="projectId"
-                  label="项目ID"
-                >
+                <a-form-item field="projectId" label="项目ID">
                   <a-input-number v-model="crud.options.form.projectId" />
                 </a-form-item>
               </a-col>
@@ -376,7 +358,7 @@
   import { OraDeployHistory } from '@/api/operation/history';
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
-  import RROperation from '@/components/crud/RROperation.vue'
+  import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
   import axios from 'axios';
   import { useI18n } from 'vue-i18n';
@@ -393,8 +375,6 @@
     },
   });
   provide('crud', crud);
-
-
 
   const instance = getCurrentInstance();
   const global = (instance as any).appContext.config.globalProperties;
@@ -479,7 +459,6 @@
   onMounted(() => {
     crud.method.refresh();
   });
-
 
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>

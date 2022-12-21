@@ -52,15 +52,15 @@
           </a-col>
           <a-divider style="height: 84px" direction="vertical" />
           <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical"/>
+            <RROperation direction="vertical" />
           </a-col>
         </a-row>
         <a-divider style="margin-top: 0" />
         <CrudOperation
-          :add-permission="['oraDeploy:add']"
-          :edit-permission="['oraDeploy:edit']"
-          :del-permission="['oraDeploy:del']"
-          :download-permission="['oraDeploy:list']"
+          :add-permission="['operation:oraDeploy:add']"
+          :edit-permission="['operation:oraDeploy:edit']"
+          :del-permission="['operation:oraDeploy:del']"
+          :download-permission="['operation:oraDeploy:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -284,139 +284,136 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraDeploy } from '@/api/operation/deploy';
-import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
-import CrudOperation from '@/components/crud/CrudOperation.vue';
-import RROperation from '@/components/crud/RROperation.vue'
-import Pagination from '@/components/crud/Pagination.vue';
-import axios from 'axios';
-import { useI18n } from 'vue-i18n';
+  import { useCrud, CrudStatus } from '@/components/crud/CRUD';
+  import { OraDeploy } from '@/api/operation/deploy';
+  import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
+  import CrudOperation from '@/components/crud/CrudOperation.vue';
+  import RROperation from '@/components/crud/RROperation.vue';
+  import Pagination from '@/components/crud/Pagination.vue';
+  import axios from 'axios';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const crud = useCrud<OraDeploy>({
-  tag: '部署管理',
-  url: '/operation/deploy',
-  title: 'operation.deploy',
-  tableInfo: {
-    componentConfig: {
-      stripe: false,
+  const { t } = useI18n();
+  const crud = useCrud<OraDeploy>({
+    tag: '部署管理',
+    url: '/operation/deploy',
+    title: 'operation.deploy',
+    tableInfo: {
+      componentConfig: {
+        stripe: false,
+      },
     },
-  },
-});
-provide('crud', crud);
+  });
+  provide('crud', crud);
 
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
 
+  // 设置部署管理 columns信息
+  crud.update.setTableColumns([
+    {
+      title: t('crud.table.update.result'),
+      dataIndex: 'result',
+      width: 90,
+      display: false,
+      fixed: 'left',
+      slotName: 'result',
+      ignoreSwitch: true,
+    },
+    {
+      title: '应用编号',
+      dataIndex: 'appId',
+      width: 150,
+      display: true,
+      slotName: 'appId',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建者',
+      dataIndex: 'createBy',
+      width: 150,
+      display: true,
+      slotName: 'createBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateBy',
+      width: 150,
+      display: true,
+      slotName: 'updateBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      width: 180,
+      display: true,
+      slotName: 'createTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      width: 180,
+      display: true,
+      slotName: 'updateTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '项目ID',
+      dataIndex: 'projectId',
+      width: 150,
+      display: true,
+      slotName: 'projectId',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '服务器',
+      dataIndex: 'serverId',
+      width: 150,
+      display: true,
+      slotName: 'serverId',
+      tooltip: true,
+      ellipsis: true,
+    },
+  ]);
+  const tableColumns = computed(() => {
+    return crud.options.tableInfo.columns?.filter((val) => val.display);
+  });
 
-const instance = getCurrentInstance();
-const global = (instance as any).appContext.config.globalProperties;
+  // region    ↓-------------------------------- switch --------------------------------↓
+  // endregion ↑-------------------------------- switch --------------------------------↑
 
-// 设置部署管理 columns信息
-crud.update.setTableColumns([
-  {
-    title: t('crud.table.update.result'),
-    dataIndex: 'result',
-    width: 90,
-    display: false,
-    fixed: 'left',
-    slotName: 'result',
-    ignoreSwitch: true,
-  },
-  {
-    title: '应用编号',
-    dataIndex: 'appId',
-    width: 150,
-    display: true,
-    slotName: 'appId',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建者',
-    dataIndex: 'createBy',
-    width: 150,
-    display: true,
-    slotName: 'createBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新者',
-    dataIndex: 'updateBy',
-    width: 150,
-    display: true,
-    slotName: 'updateBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: 180,
-    display: true,
-    slotName: 'createTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    width: 180,
-    display: true,
-    slotName: 'updateTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '项目ID',
-    dataIndex: 'projectId',
-    width: 150,
-    display: true,
-    slotName: 'projectId',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '服务器',
-    dataIndex: 'serverId',
-    width: 150,
-    display: true,
-    slotName: 'serverId',
-    tooltip: true,
-    ellipsis: true,
-  },
-]);
-const tableColumns = computed(() => {
-  return crud.options.tableInfo.columns?.filter((val) => val.display);
-});
+  // region    ↓-------------------------------- rangePicker --------------------------------↓
+  // endregion ↑-------------------------------- rangePicker --------------------------------↑
 
-// region    ↓-------------------------------- switch --------------------------------↓
-// endregion ↑-------------------------------- switch --------------------------------↑
+  // region    ↓-------------------------------- 钩子 --------------------------------↓
+  onMounted(() => {
+    crud.method.refresh();
+  });
 
-// region    ↓-------------------------------- rangePicker --------------------------------↓
-// endregion ↑-------------------------------- rangePicker --------------------------------↑
-
-// region    ↓-------------------------------- 钩子 --------------------------------↓
-onMounted(() => {
-  crud.method.refresh();
-});
-
-
-// endregion ↑-------------------------------- 钩子 --------------------------------↑
+  // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
 <style scoped>
-.container {
-  height: 100%;
-  padding: 16px 20px;
-  padding-bottom: 0;
-  background-color: var(--color-fill-2);
-}
+  .container {
+    height: 100%;
+    padding: 16px 20px;
+    padding-bottom: 0;
+    background-color: var(--color-fill-2);
+  }
 
-.panel {
-  height: 100%;
-  padding: 16px;
-  background-color: var(--color-bg-2);
-  border-radius: 4px;
-}
+  .panel {
+    height: 100%;
+    padding: 16px;
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
+  }
 </style>

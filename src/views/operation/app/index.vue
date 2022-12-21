@@ -29,10 +29,10 @@
           </a-col>
         </a-row>
         <CrudOperation
-          :add-permission="['oraApp:add']"
-          :edit-permission="['oraApp:edit']"
-          :del-permission="['oraApp:del']"
-          :download-permission="['oraApp:list']"
+          :add-permission="['operation:oraApp:add']"
+          :edit-permission="['operation:oraApp:edit']"
+          :del-permission="['operation:oraApp:del']"
+          :download-permission="['operation:oraApp:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -102,11 +102,9 @@
                 <a-form-item
                   field="startScript"
                   label="启动脚本"
-                  :rules="[
-                    { required: true, message: '启动脚本不能为空' }
-                    ]"
+                  :rules="[{ required: true, message: '启动脚本不能为空' }]"
                 >
-                  <a-textarea v-model="crud.options.form.startScript"/>
+                  <a-textarea v-model="crud.options.form.startScript" />
                 </a-form-item>
               </a-col>
               <!--部署脚本-->
@@ -114,11 +112,9 @@
                 <a-form-item
                   field="deployScript"
                   label="部署脚本"
-                  :rules="[
-                    { required: true, message: '部署脚本不能为空' }
-                    ]"
+                  :rules="[{ required: true, message: '部署脚本不能为空' }]"
                 >
-                  <a-textarea v-model="crud.options.form.deployScript"/>
+                  <a-textarea v-model="crud.options.form.deployScript" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -470,189 +466,187 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraApp } from '@/api/operation/app';
-import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
-import CrudOperation from '@/components/crud/CrudOperation.vue';
-import RROperation from '@/components/crud/RROperation.vue'
-import Pagination from '@/components/crud/Pagination.vue';
-import axios from 'axios';
-import { useI18n } from 'vue-i18n';
+  import { useCrud, CrudStatus } from '@/components/crud/CRUD';
+  import { OraApp } from '@/api/operation/app';
+  import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
+  import CrudOperation from '@/components/crud/CrudOperation.vue';
+  import RROperation from '@/components/crud/RROperation.vue';
+  import Pagination from '@/components/crud/Pagination.vue';
+  import axios from 'axios';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const crud = useCrud<OraApp>({
-  tag: '应用管理',
-  url: '/operation/app',
-  title: 'operation.app',
-  tableInfo: {
-    componentConfig: {
-      stripe: false,
+  const { t } = useI18n();
+  const crud = useCrud<OraApp>({
+    tag: '应用管理',
+    url: '/operation/app',
+    title: 'operation.app',
+    tableInfo: {
+      componentConfig: {
+        stripe: false,
+      },
     },
-  },
-});
-provide('crud', crud);
+  });
+  provide('crud', crud);
 
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
 
+  // 设置应用管理 columns信息
+  crud.update.setTableColumns([
+    {
+      title: t('crud.table.update.result'),
+      dataIndex: 'result',
+      width: 90,
+      display: false,
+      fixed: 'left',
+      slotName: 'result',
+      ignoreSwitch: true,
+    },
+    {
+      title: '应用名称',
+      dataIndex: 'name',
+      width: 150,
+      display: true,
+      slotName: 'name',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '上传目录',
+      dataIndex: 'uploadPath',
+      width: 150,
+      display: true,
+      slotName: 'uploadPath',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '部署路径',
+      dataIndex: 'deployPath',
+      width: 150,
+      display: true,
+      slotName: 'deployPath',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '备份路径',
+      dataIndex: 'backupPath',
+      width: 150,
+      display: true,
+      slotName: 'backupPath',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '应用端口',
+      dataIndex: 'port',
+      width: 150,
+      display: true,
+      slotName: 'port',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '启动脚本',
+      dataIndex: 'startScript',
+      width: 150,
+      display: true,
+      slotName: 'startScript',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '部署脚本',
+      dataIndex: 'deployScript',
+      width: 150,
+      display: true,
+      slotName: 'deployScript',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建者',
+      dataIndex: 'createBy',
+      width: 150,
+      display: true,
+      slotName: 'createBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateBy',
+      width: 150,
+      display: true,
+      slotName: 'updateBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建日期',
+      dataIndex: 'createTime',
+      width: 180,
+      display: true,
+      slotName: 'createTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      width: 180,
+      display: true,
+      slotName: 'updateTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '项目ID',
+      dataIndex: 'projectId',
+      width: 150,
+      display: true,
+      slotName: 'projectId',
+      tooltip: true,
+      ellipsis: true,
+    },
+  ]);
+  const tableColumns = computed(() => {
+    return crud.options.tableInfo.columns?.filter((val) => val.display);
+  });
 
-const instance = getCurrentInstance();
-const global = (instance as any).appContext.config.globalProperties;
+  // region    ↓-------------------------------- switch --------------------------------↓
+  // endregion ↑-------------------------------- switch --------------------------------↑
 
-// 设置应用管理 columns信息
-crud.update.setTableColumns([
-  {
-    title: t('crud.table.update.result'),
-    dataIndex: 'result',
-    width: 90,
-    display: false,
-    fixed: 'left',
-    slotName: 'result',
-    ignoreSwitch: true,
-  },
-  {
-    title: '应用名称',
-    dataIndex: 'name',
-    width: 150,
-    display: true,
-    slotName: 'name',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '上传目录',
-    dataIndex: 'uploadPath',
-    width: 150,
-    display: true,
-    slotName: 'uploadPath',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '部署路径',
-    dataIndex: 'deployPath',
-    width: 150,
-    display: true,
-    slotName: 'deployPath',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '备份路径',
-    dataIndex: 'backupPath',
-    width: 150,
-    display: true,
-    slotName: 'backupPath',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '应用端口',
-    dataIndex: 'port',
-    width: 150,
-    display: true,
-    slotName: 'port',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '启动脚本',
-    dataIndex: 'startScript',
-    width: 150,
-    display: true,
-    slotName: 'startScript',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '部署脚本',
-    dataIndex: 'deployScript',
-    width: 150,
-    display: true,
-    slotName: 'deployScript',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建者',
-    dataIndex: 'createBy',
-    width: 150,
-    display: true,
-    slotName: 'createBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新者',
-    dataIndex: 'updateBy',
-    width: 150,
-    display: true,
-    slotName: 'updateBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建日期',
-    dataIndex: 'createTime',
-    width: 180,
-    display: true,
-    slotName: 'createTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    width: 180,
-    display: true,
-    slotName: 'updateTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '项目ID',
-    dataIndex: 'projectId',
-    width: 150,
-    display: true,
-    slotName: 'projectId',
-    tooltip: true,
-    ellipsis: true,
-  },
-]);
-const tableColumns = computed(() => {
-  return crud.options.tableInfo.columns?.filter((val) => val.display);
-});
+  // region    ↓-------------------------------- rangePicker --------------------------------↓
+  // endregion ↑-------------------------------- rangePicker --------------------------------↑
 
-// region    ↓-------------------------------- switch --------------------------------↓
-// endregion ↑-------------------------------- switch --------------------------------↑
+  // region    ↓-------------------------------- 钩子 --------------------------------↓
+  onMounted(() => {
+    crud.method.refresh();
+  });
 
-// region    ↓-------------------------------- rangePicker --------------------------------↓
-// endregion ↑-------------------------------- rangePicker --------------------------------↑
-
-// region    ↓-------------------------------- 钩子 --------------------------------↓
-onMounted(() => {
-  crud.method.refresh();
-});
-
-
-// endregion ↑-------------------------------- 钩子 --------------------------------↑
+  // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
 <script lang="ts">
-export default {
-  name: 'App',
-};
+  export default {
+    name: 'App',
+  };
 </script>
-<style scoped>
-.container {
-  height: 100%;
-  padding: 16px 20px;
-  padding-bottom: 0;
-  background-color: var(--color-fill-2);
-}
 
-.panel {
-  height: 100%;
-  padding: 16px;
-  background-color: var(--color-bg-2);
-  border-radius: 4px;
-}
+<style scoped>
+  .container {
+    height: 100%;
+    padding: 16px 20px;
+    padding-bottom: 0;
+    background-color: var(--color-fill-2);
+  }
+
+  .panel {
+    height: 100%;
+    padding: 16px;
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
+  }
 </style>

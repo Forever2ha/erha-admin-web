@@ -52,7 +52,6 @@
                       <a-select
                         v-model="crud.options.query.typeDatabese"
                         placeholder="输入类型搜索"
-
                       >
                         <a-option
                           v-for="s in dict.type_database"
@@ -70,15 +69,15 @@
           </a-col>
           <a-divider style="height: 84px" direction="vertical" />
           <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical"/>
+            <RROperation direction="vertical" />
           </a-col>
         </a-row>
         <a-divider style="margin-top: 0" />
         <CrudOperation
-          :add-permission="['oraDatabase:add']"
-          :edit-permission="['oraDatabase:edit']"
-          :del-permission="['oraDatabase:del']"
-          :download-permission="['oraDatabase:list']"
+          :add-permission="['operation:oraDatabase:add']"
+          :edit-permission="['operation:oraDatabase:edit']"
+          :del-permission="['operation:oraDatabase:del']"
+          :download-permission="['operation:oraDatabase:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -450,7 +449,7 @@
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import { useDict } from '@/components/dict';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
-  import RROperation from '@/components/crud/RROperation.vue'
+  import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
   import axios from 'axios';
   import { useI18n } from 'vue-i18n';
@@ -467,8 +466,6 @@
     },
   });
   provide('crud', crud);
-
-
 
   // 字典
   const dict = useDict('type_database');
@@ -591,7 +588,6 @@
   onMounted(() => {
     crud.method.refresh();
   });
-
 
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>

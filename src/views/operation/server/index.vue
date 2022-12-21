@@ -29,10 +29,10 @@
           </a-col>
         </a-row>
         <CrudOperation
-          :add-permission="['oraServer:add']"
-          :edit-permission="['oraServer:edit']"
-          :del-permission="['oraServer:del']"
-          :download-permission="['oraServer:list']"
+          :add-permission="['operation:oraServer:add']"
+          :edit-permission="['operation:oraServer:edit']"
+          :del-permission="['operation:oraServer:del']"
+          :download-permission="['operation:oraServer:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -382,166 +382,163 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraServer } from '@/api/operation/server';
-import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
-import CrudOperation from '@/components/crud/CrudOperation.vue';
-import RROperation from '@/components/crud/RROperation.vue'
-import Pagination from '@/components/crud/Pagination.vue';
-import axios from 'axios';
-import { useI18n } from 'vue-i18n';
+  import { useCrud, CrudStatus } from '@/components/crud/CRUD';
+  import { OraServer } from '@/api/operation/server';
+  import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
+  import CrudOperation from '@/components/crud/CrudOperation.vue';
+  import RROperation from '@/components/crud/RROperation.vue';
+  import Pagination from '@/components/crud/Pagination.vue';
+  import axios from 'axios';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const crud = useCrud<OraServer>({
-  tag: '服务器',
-  url: '/operation/server',
-  title: 'operation.server',
-  tableInfo: {
-    componentConfig: {
-      stripe: false,
+  const { t } = useI18n();
+  const crud = useCrud<OraServer>({
+    tag: '服务器',
+    url: '/operation/server',
+    title: 'operation.server',
+    tableInfo: {
+      componentConfig: {
+        stripe: false,
+      },
     },
-  },
-});
-provide('crud', crud);
+  });
+  provide('crud', crud);
 
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
 
+  // 设置服务器 columns信息
+  crud.update.setTableColumns([
+    {
+      title: t('crud.table.update.result'),
+      dataIndex: 'result',
+      width: 90,
+      display: false,
+      fixed: 'left',
+      slotName: 'result',
+      ignoreSwitch: true,
+    },
+    {
+      title: '账号',
+      dataIndex: 'account',
+      width: 150,
+      display: true,
+      slotName: 'account',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: 'IP地址',
+      dataIndex: 'ip',
+      width: 150,
+      display: true,
+      slotName: 'ip',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      width: 150,
+      display: true,
+      slotName: 'name',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '密码',
+      dataIndex: 'password',
+      width: 150,
+      display: true,
+      slotName: 'password',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '端口',
+      dataIndex: 'port',
+      width: 150,
+      display: true,
+      slotName: 'port',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建者',
+      dataIndex: 'createBy',
+      width: 150,
+      display: true,
+      slotName: 'createBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新者',
+      dataIndex: 'updateBy',
+      width: 150,
+      display: true,
+      slotName: 'updateBy',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      width: 180,
+      display: true,
+      slotName: 'createTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      width: 180,
+      display: true,
+      slotName: 'updateTime',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '项目ID',
+      dataIndex: 'projectId',
+      width: 150,
+      display: true,
+      slotName: 'projectId',
+      tooltip: true,
+      ellipsis: true,
+    },
+  ]);
+  const tableColumns = computed(() => {
+    return crud.options.tableInfo.columns?.filter((val) => val.display);
+  });
 
-const instance = getCurrentInstance();
-const global = (instance as any).appContext.config.globalProperties;
+  // region    ↓-------------------------------- switch --------------------------------↓
+  // endregion ↑-------------------------------- switch --------------------------------↑
 
-// 设置服务器 columns信息
-crud.update.setTableColumns([
-  {
-    title: t('crud.table.update.result'),
-    dataIndex: 'result',
-    width: 90,
-    display: false,
-    fixed: 'left',
-    slotName: 'result',
-    ignoreSwitch: true,
-  },
-  {
-    title: '账号',
-    dataIndex: 'account',
-    width: 150,
-    display: true,
-    slotName: 'account',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: 'IP地址',
-    dataIndex: 'ip',
-    width: 150,
-    display: true,
-    slotName: 'ip',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    width: 150,
-    display: true,
-    slotName: 'name',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '密码',
-    dataIndex: 'password',
-    width: 150,
-    display: true,
-    slotName: 'password',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '端口',
-    dataIndex: 'port',
-    width: 150,
-    display: true,
-    slotName: 'port',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建者',
-    dataIndex: 'createBy',
-    width: 150,
-    display: true,
-    slotName: 'createBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新者',
-    dataIndex: 'updateBy',
-    width: 150,
-    display: true,
-    slotName: 'updateBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: 180,
-    display: true,
-    slotName: 'createTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    width: 180,
-    display: true,
-    slotName: 'updateTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '项目ID',
-    dataIndex: 'projectId',
-    width: 150,
-    display: true,
-    slotName: 'projectId',
-    tooltip: true,
-    ellipsis: true,
-  },
-]);
-const tableColumns = computed(() => {
-  return crud.options.tableInfo.columns?.filter((val) => val.display);
-});
+  // region    ↓-------------------------------- rangePicker --------------------------------↓
+  // endregion ↑-------------------------------- rangePicker --------------------------------↑
 
-// region    ↓-------------------------------- switch --------------------------------↓
-// endregion ↑-------------------------------- switch --------------------------------↑
+  // region    ↓-------------------------------- 钩子 --------------------------------↓
+  onMounted(() => {
+    crud.method.refresh();
+  });
 
-// region    ↓-------------------------------- rangePicker --------------------------------↓
-// endregion ↑-------------------------------- rangePicker --------------------------------↑
-
-// region    ↓-------------------------------- 钩子 --------------------------------↓
-onMounted(() => {
-  crud.method.refresh();
-});
-
-
-// endregion ↑-------------------------------- 钩子 --------------------------------↑
+  // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
 <style scoped>
-.container {
-  height: 100%;
-  padding: 16px 20px;
-  padding-bottom: 0;
-  background-color: var(--color-fill-2);
-}
+  .container {
+    height: 100%;
+    padding: 16px 20px;
+    padding-bottom: 0;
+    background-color: var(--color-fill-2);
+  }
 
-.panel {
-  height: 100%;
-  padding: 16px;
-  background-color: var(--color-bg-2);
-  border-radius: 4px;
-}
+  .panel {
+    height: 100%;
+    padding: 16px;
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
+  }
 </style>
