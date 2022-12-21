@@ -457,8 +457,8 @@
   const { t } = useI18n();
   const crud = useCrud<OraDatabase>({
     tag: '部署管理',
-    url: '/operation/datebase',
-    title: 'operation.datebase',
+    url: '/operation/database',
+    title: 'operation.database',
     tableInfo: {
       componentConfig: {
         stripe: false,
