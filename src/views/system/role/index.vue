@@ -20,10 +20,10 @@
 
         <!--crudOperation-->
         <CrudOperation
-          :add-permission="['role:list']"
-          :edit-permission="['role:edit']"
-          :del-permission="['role:del']"
-          :download-permission="['role:list']"
+          :add-permission="['system:role:list']"
+          :edit-permission="['system:role:edit']"
+          :del-permission="['system:role:del']"
+          :download-permission="['system:role:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -497,7 +497,7 @@
                     key: 'id',
                     icon: 'treeIcon',
                   }"
-                  :check-strictly="true"
+                  :check-strictly="false"
                   :data="menuTree"
                 />
               </div>

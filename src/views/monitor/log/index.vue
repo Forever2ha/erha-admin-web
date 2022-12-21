@@ -137,8 +137,8 @@
         </a-row>
         <a-divider style="margin-top: 0" />
         <CrudOperation
-          :del-permission="['sysLog:del']"
-          :download-permission="['sysLog:list']"
+          :del-permission="['monitor:sysLog:del']"
+          :download-permission="['monitor:sysLog:list']"
           :show-add="false"
           :show-edit="false"
           style="margin-bottom: 12px"

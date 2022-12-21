@@ -34,10 +34,10 @@
 
         <!--crudOperation-->
         <CrudOperation
-          :add-permission="['job:list']"
-          :edit-permission="['job:edit']"
-          :del-permission="['job:del']"
-          :download-permission="['job:list']"
+          :add-permission="['system:job:list']"
+          :edit-permission="['system:job:edit']"
+          :del-permission="['system:job:del']"
+          :download-permission="['system:job:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>

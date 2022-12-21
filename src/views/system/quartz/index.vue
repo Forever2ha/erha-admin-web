@@ -24,10 +24,10 @@
              CRUD操作
         ================================= -->
         <CrudOperation
-          :add-permission="['quartz:list']"
-          :edit-permission="['quartz:edit']"
-          :del-permission="['quartz:del']"
-          :download-permission="['quartz:list']"
+          :add-permission="['system:quartz:list']"
+          :edit-permission="['system:quartz:edit']"
+          :del-permission="['system:quartz:del']"
+          :download-permission="['system:quartz:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
@@ -169,7 +169,7 @@
             <a-button
               v-if="!crud.options.tableInfo.isEdit"
               :key="111"
-              v-permission="['quartzLog:list']"
+              v-permission="['system:quartzLog:list']"
               type="outline"
               size="small"
               class="button"

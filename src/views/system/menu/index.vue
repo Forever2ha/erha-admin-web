@@ -18,10 +18,10 @@
           </a-col>
         </a-row>
         <CrudOperation
-          :add-permission="['menu:list']"
-          :edit-permission="['menu:edit']"
-          :del-permission="['menu:del']"
-          :download-permission="['menu:list']"
+          :add-permission="['system:menu:list']"
+          :edit-permission="['system:menu:edit']"
+          :del-permission="['system:menu:del']"
+          :download-permission="['system:menu:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>

@@ -92,10 +92,10 @@
 
           <!--增删改查组件-->
           <crud-operation
-            :add-permission="['user:add']"
-            :edit-permission="['user:edit']"
-            :del-permission="['user:del']"
-            :download-permission="['user:list']"
+            :add-permission="['system:user:add']"
+            :edit-permission="['system:user:edit']"
+            :del-permission="['system:user:del']"
+            :download-permission="['system:user:list']"
             style="margin-bottom: 12px"
           >
             <!--添加用户表单项-->
