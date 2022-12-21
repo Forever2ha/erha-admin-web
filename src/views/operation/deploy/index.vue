@@ -3,88 +3,76 @@
     <div class="panel">
       <div style="position: relative; height: 100%">
         <!--查询表单-->
-        <a-row :gutter="24" style="margin-bottom: 12px">
-          <!--名称搜索框-->
-          <a-col :span="6">
-            <a-input
-              v-model="crud.options.query.name"
-              placeholder="输入名称搜索"
+        <a-row>
+          <a-col :flex="1">
+            <a-form
+              :model="crud.options.query"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }"
+              label-align="left"
             >
-              <template #prefix> Like </template>
-            </a-input>
+              <a-scrollbar style="height: 104px; overflow: auto">
+                <a-row :gutter="16" style="width: 100%">
+                  <!--应用编号搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="appId" label="应用编号">
+                      <a-input-number
+                        v-model="crud.options.query.appId"
+                        placeholder="输入应用编号搜索"
+                      >
+                        <template #prefix> Like </template>
+                      </a-input-number>
+                    </a-form-item>
+                  </a-col>
+                  <!--项目ID搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="projectId" label="项目ID">
+                      <a-input-number
+                        v-model="crud.options.query.projectId"
+                        placeholder="输入项目ID搜索"
+                      >
+                        <template #prefix> = </template>
+                      </a-input-number>
+                    </a-form-item>
+                  </a-col>
+                  <!--服务器搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="serverId" label="服务器">
+                      <a-input-number
+                        v-model="crud.options.query.serverId"
+                        placeholder="输入服务器搜索"
+                      >
+                        <template #prefix> = </template>
+                      </a-input-number>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+              </a-scrollbar>
+            </a-form>
           </a-col>
-
-          <!--项目ID搜索框-->
-          <a-col :span="6">
-            <a-input-number
-              v-model="crud.options.query.projectId"
-              placeholder="输入项目ID搜索"
-            >
-              <template #prefix> = </template>
-            </a-input-number>
-          </a-col>
-
-          <a-col :span="6">
-            <RROperation />
+          <a-divider style="height: 84px" direction="vertical" />
+          <a-col :flex="'86px'" style="text-align: right">
+            <RROperation direction="vertical"/>
           </a-col>
         </a-row>
+        <a-divider style="margin-top: 0" />
         <CrudOperation
-          :add-permission="['oraServer:add']"
-          :edit-permission="['oraServer:edit']"
-          :del-permission="['oraServer:del']"
-          :download-permission="['oraServer:list']"
+          :add-permission="['oraDeploy:add']"
+          :edit-permission="['oraDeploy:edit']"
+          :del-permission="['oraDeploy:del']"
+          :download-permission="['oraDeploy:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
             <a-row :gutter="12">
-              <!--账号-->
+              <!--应用编号-->
               <a-col :span="12">
                 <a-form-item
-                  field="account"
-                  label="账号"
-                  :rules="[{ required: true, message: '账号不能为空' }]"
+                  field="appId"
+                  label="应用编号"
+                  :rules="[{ required: true, message: '应用编号不能为空' }]"
                 >
-                  <a-input v-model="crud.options.form.account" />
-                </a-form-item>
-              </a-col>
-              <!--IP地址-->
-              <a-col :span="12">
-                <a-form-item
-                  field="ip"
-                  label="IP地址"
-                  :rules="[{ required: true, message: 'IP地址不能为空' }]"
-                >
-                  <a-input v-model="crud.options.form.ip" />
-                </a-form-item>
-              </a-col>
-              <!--名称-->
-              <a-col :span="12">
-                <a-form-item
-                  field="name"
-                  label="名称"
-                  :rules="[{ required: true, message: '名称不能为空' }]"
-                >
-                  <a-input v-model="crud.options.form.name" />
-                </a-form-item>
-              </a-col>
-              <!--密码-->
-              <a-col :span="12">
-                <a-form-item
-                  field="password"
-                  label="密码"
-                  :rules="[{ required: true, message: '密码不能为空' }]"
-                >
-                  <a-input v-model="crud.options.form.password" />
-                </a-form-item>
-              </a-col>
-              <!--端口-->
-              <a-col :span="12">
-                <a-form-item
-                  field="port"
-                  label="端口"
-                  :rules="[{ required: true, message: '端口不能为空' }]"
-                >
-                  <a-input-number v-model="crud.options.form.port" />
+                  <a-input-number v-model="crud.options.form.appId" />
                 </a-form-item>
               </a-col>
               <!--项目ID-->
@@ -95,6 +83,16 @@
                   :rules="[{ required: true, message: '项目ID不能为空' }]"
                 >
                   <a-input-number v-model="crud.options.form.projectId" />
+                </a-form-item>
+              </a-col>
+              <!--服务器-->
+              <a-col :span="12">
+                <a-form-item
+                  field="serverId"
+                  label="服务器"
+                  :rules="[{ required: true, message: '服务器不能为空' }]"
+                >
+                  <a-input-number v-model="crud.options.form.serverId" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -127,7 +125,7 @@
                 }
               : undefined
           "
-          style="height: calc(100% - 128px); margin-bottom: 12px"
+          style="height: calc(100% - 209px); margin-bottom: 12px"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -181,153 +179,25 @@
             </div>
           </template>
 
-          <!--账号-->
-          <template #account="{ record }">
+          <!--应用编号-->
+          <template #appId="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.account }}
+              {{ record.appId }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.account }}
+                {{ record.appId }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].account
-                    ? crud.options.form[record.id].account
-                    : record.account
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].account"
-                :default-value="record.account"
-              />
-            </div>
-          </template>
-
-          <!--IP地址-->
-          <template #ip="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.ip }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.ip }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].ip
-                    ? crud.options.form[record.id].ip
-                    : record.ip
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].ip"
-                :default-value="record.ip"
-              />
-            </div>
-          </template>
-
-          <!--名称-->
-          <template #name="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.name }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.name }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].name
-                    ? crud.options.form[record.id].name
-                    : record.name
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].name"
-                :default-value="record.name"
-              />
-            </div>
-          </template>
-
-          <!--密码-->
-          <template #password="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.password }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.password }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].password
-                    ? crud.options.form[record.id].password
-                    : record.password
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].password"
-                :default-value="record.password"
-              />
-            </div>
-          </template>
-
-          <!--端口-->
-          <template #port="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.port }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.port }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].port
-                    ? crud.options.form[record.id].port
-                    : record.port
+                  crud.options.form[record.id].appId
+                    ? crud.options.form[record.id].appId
+                    : record.appId
                 }}
               </div>
             </div>
@@ -335,8 +205,8 @@
             <!--修改情况下-->
             <div v-if="record.editable">
               <a-input-number
-                v-model="crud.options.form[record.id].port"
-                :default-value="record.port"
+                v-model="crud.options.form[record.id].appId"
+                :default-value="record.appId"
               />
             </div>
           </template>
@@ -372,6 +242,38 @@
               />
             </div>
           </template>
+
+          <!--服务器-->
+          <template #serverId="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.serverId }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.serverId }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].serverId
+                    ? crud.options.form[record.id].serverId
+                    : record.serverId
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input-number
+                v-model="crud.options.form[record.id].serverId"
+                :default-value="record.serverId"
+              />
+            </div>
+          </template>
         </a-table>
         <Pagination
           style="position: absolute; right: 0; bottom: 0; padding-right: 7px"
@@ -383,7 +285,7 @@
 
 <script lang="ts" setup>
 import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraServer } from '@/api/operation/server';
+import { OraDeploy } from '@/api/operation/deploy';
 import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
 import CrudOperation from '@/components/crud/CrudOperation.vue';
 import RROperation from '@/components/crud/RROperation.vue'
@@ -392,10 +294,10 @@ import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const crud = useCrud<OraServer>({
-  tag: '服务器',
-  url: '/operation/server',
-  title: 'operation.server',
+const crud = useCrud<OraDeploy>({
+  tag: '部署管理',
+  url: '/operation/deploy',
+  title: 'operation.deploy',
   tableInfo: {
     componentConfig: {
       stripe: false,
@@ -409,7 +311,7 @@ provide('crud', crud);
 const instance = getCurrentInstance();
 const global = (instance as any).appContext.config.globalProperties;
 
-// 设置服务器 columns信息
+// 设置部署管理 columns信息
 crud.update.setTableColumns([
   {
     title: t('crud.table.update.result'),
@@ -421,47 +323,11 @@ crud.update.setTableColumns([
     ignoreSwitch: true,
   },
   {
-    title: '账号',
-    dataIndex: 'account',
+    title: '应用编号',
+    dataIndex: 'appId',
     width: 150,
     display: true,
-    slotName: 'account',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: 'IP地址',
-    dataIndex: 'ip',
-    width: 150,
-    display: true,
-    slotName: 'ip',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    width: 150,
-    display: true,
-    slotName: 'name',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '密码',
-    dataIndex: 'password',
-    width: 150,
-    display: true,
-    slotName: 'password',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '端口',
-    dataIndex: 'port',
-    width: 150,
-    display: true,
-    slotName: 'port',
+    slotName: 'appId',
     tooltip: true,
     ellipsis: true,
   },
@@ -507,6 +373,15 @@ crud.update.setTableColumns([
     width: 150,
     display: true,
     slotName: 'projectId',
+    tooltip: true,
+    ellipsis: true,
+  },
+  {
+    title: '服务器',
+    dataIndex: 'serverId',
+    width: 150,
+    display: true,
+    slotName: 'serverId',
     tooltip: true,
     ellipsis: true,
   },

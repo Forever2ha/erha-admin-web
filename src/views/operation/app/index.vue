@@ -3,157 +3,122 @@
     <div class="panel">
       <div style="position: relative; height: 100%">
         <!--查询表单-->
-        <a-row>
-          <a-col :flex="1">
-            <a-form
-              :model="crud.options.query"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              label-align="left"
+        <a-row :gutter="24" style="margin-bottom: 12px">
+          <!--应用名称搜索框-->
+          <a-col :span="6">
+            <a-input
+              v-model="crud.options.query.name"
+              placeholder="输入应用名称搜索"
             >
-              <a-scrollbar style="height: 104px; overflow: auto">
-                <a-row :gutter="16" style="width: 100%">
-                  <!--项目名称搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="pname" label="项目名称">
-                      <a-input
-                        v-model="crud.options.query.pname"
-                        placeholder="输入项目名称搜索"
-                      >
-                        <template #prefix> Like </template>
-                      </a-input>
-                    </a-form-item>
-                  </a-col>
-                  <!--创建者搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="createBy" label="创建者">
-                      <a-input
-                        v-model="crud.options.query.createBy"
-                        placeholder="输入创建者搜索"
-                      >
-                        <template #prefix> Like </template>
-                      </a-input>
-                    </a-form-item>
-                  </a-col>
-                  <!--状态搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="enabled" label="状态">
-                      <a-select
-                        v-model="crud.options.query.enabled"
-                        placeholder="输入状态搜索"
-
-                      >
-                        <a-option
-                          v-for="s in dict.user_status"
-                          :key="s.detailId"
-                          :value="s.value"
-                        >
-                          {{ s.label }}
-                        </a-option>
-                      </a-select>
-                    </a-form-item>
-                  </a-col>
-                </a-row>
-              </a-scrollbar>
-            </a-form>
+              <template #prefix> Like </template>
+            </a-input>
           </a-col>
-          <a-divider style="height: 84px" direction="vertical" />
-          <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical"/>
+
+          <!--项目ID搜索框-->
+          <a-col :span="6">
+            <a-input-number
+              v-model="crud.options.query.projectId"
+              placeholder="输入项目ID搜索"
+            >
+              <template #prefix> = </template>
+            </a-input-number>
+          </a-col>
+
+          <a-col :span="6">
+            <RROperation />
           </a-col>
         </a-row>
-        <a-divider style="margin-top: 0" />
         <CrudOperation
-          :add-permission="['oraProject:add']"
-          :edit-permission="['oraProject:edit']"
-          :del-permission="['oraProject:del']"
-          :download-permission="['oraProject:list']"
+          :add-permission="['oraApp:add']"
+          :edit-permission="['oraApp:edit']"
+          :del-permission="['oraApp:del']"
+          :download-permission="['oraApp:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
             <a-row :gutter="12">
-              <!--项目名称-->
+              <!--应用名称-->
               <a-col :span="12">
                 <a-form-item
-                  field="pname"
-                  label="项目名称"
-                  :rules="[{ required: true, message: '项目名称不能为空' }]"
+                  field="name"
+                  label="应用名称"
+                  :rules="[{ required: true, message: '应用名称不能为空' }]"
                 >
-                  <a-input v-model="crud.options.form.pname" />
+                  <a-input v-model="crud.options.form.name" />
                 </a-form-item>
               </a-col>
-              <!--项目计划开始日期-->
+              <!--上传目录-->
               <a-col :span="12">
                 <a-form-item
-                  field="planStartDate"
-                  label="项目计划开始日期"
-                  :rules="[{ required: true, message: '项目计划开始日期不能为空' }]"
+                  field="uploadPath"
+                  label="上传目录"
+                  :rules="[{ required: true, message: '上传目录不能为空' }]"
                 >
-                  <a-date-picker
-                    v-model="crud.options.form.planStartDate"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="crud.options.form.uploadPath" />
                 </a-form-item>
               </a-col>
-              <!--项目计划结束日期-->
+              <!--部署路径-->
               <a-col :span="12">
                 <a-form-item
-                  field="planFinishDate"
-                  label="项目计划结束日期"
+                  field="deployPath"
+                  label="部署路径"
+                  :rules="[{ required: true, message: '部署路径不能为空' }]"
                 >
-                  <a-date-picker
-                    v-model="crud.options.form.planFinishDate"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="crud.options.form.deployPath" />
                 </a-form-item>
               </a-col>
-              <!--实际开始日期-->
+              <!--备份路径-->
               <a-col :span="12">
                 <a-form-item
-                  field="actuStartDate"
-                  label="实际开始日期"
+                  field="backupPath"
+                  label="备份路径"
+                  :rules="[{ required: true, message: '备份路径不能为空' }]"
                 >
-                  <a-date-picker
-                    v-model="crud.options.form.actuStartDate"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="crud.options.form.backupPath" />
                 </a-form-item>
               </a-col>
-              <!--实际结束日期-->
+              <!--应用端口-->
               <a-col :span="12">
                 <a-form-item
-                  field="actuFinishDate"
-                  label="实际结束日期"
+                  field="port"
+                  label="应用端口"
+                  :rules="[{ required: true, message: '应用端口不能为空' }]"
                 >
-                  <a-date-picker
-                    v-model="crud.options.form.actuFinishDate"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    style="width: 100%"
-                  />
+                  <a-input-number v-model="crud.options.form.port" />
                 </a-form-item>
               </a-col>
-              <!--状态-->
+              <!--项目ID-->
               <a-col :span="12">
                 <a-form-item
-                  field="enabled"
-                  label="状态"
-                  :rules="[{ required: true, message: '状态不能为空' }]"
+                  field="projectId"
+                  label="项目ID"
+                  :rules="[{ required: true, message: '项目ID不能为空' }]"
                 >
-                  <a-radio-group v-model="crud.options.form.enabled">
-                    <a-radio
-                      v-for="s in dict.user_status"
-                      :key="s.detailId"
-                      :value="s.value"
-                    >{{ s.label }}</a-radio
-                    >
-                  </a-radio-group>
+                  <a-input-number v-model="crud.options.form.projectId" />
+                </a-form-item>
+              </a-col>
+              <!--启动脚本-->
+              <a-col :span="24">
+                <a-form-item
+                  field="startScript"
+                  label="启动脚本"
+                  :rules="[
+                    { required: true, message: '启动脚本不能为空' }
+                    ]"
+                >
+                  <a-textarea v-model="crud.options.form.startScript"/>
+                </a-form-item>
+              </a-col>
+              <!--部署脚本-->
+              <a-col :span="24">
+                <a-form-item
+                  field="deployScript"
+                  label="部署脚本"
+                  :rules="[
+                    { required: true, message: '部署脚本不能为空' }
+                    ]"
+                >
+                  <a-textarea v-model="crud.options.form.deployScript"/>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -186,7 +151,7 @@
                 }
               : undefined
           "
-          style="height: calc(100% - 209px); margin-bottom: 12px"
+          style="height: calc(100% - 128px); margin-bottom: 12px"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -240,25 +205,25 @@
             </div>
           </template>
 
-          <!--项目名称-->
-          <template #pname="{ record }">
+          <!--应用名称-->
+          <template #name="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.pname }}
+              {{ record.name }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.pname }}
+                {{ record.name }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].pname
-                    ? crud.options.form[record.id].pname
-                    : record.pname
+                  crud.options.form[record.id].name
+                    ? crud.options.form[record.id].name
+                    : record.name
                 }}
               </div>
             </div>
@@ -266,175 +231,233 @@
             <!--修改情况下-->
             <div v-if="record.editable">
               <a-input
-                v-model="crud.options.form[record.id].pname"
-                :default-value="record.pname"
+                v-model="crud.options.form[record.id].name"
+                :default-value="record.name"
               />
             </div>
           </template>
 
-          <!--项目计划开始日期-->
-          <template #planStartDate="{ record }">
+          <!--上传目录-->
+          <template #uploadPath="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.planStartDate }}
+              {{ record.uploadPath }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.planStartDate }}
+                {{ record.uploadPath }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].planStartDate
-                    ? crud.options.form[record.id].planStartDate
-                    : record.planStartDate
+                  crud.options.form[record.id].uploadPath
+                    ? crud.options.form[record.id].uploadPath
+                    : record.uploadPath
                 }}
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-date-picker
-                v-model="crud.options.form[record.id].planStartDate"
-                show-time
-                :default-value="record.planStartDate"
-                format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%"
+              <a-input
+                v-model="crud.options.form[record.id].uploadPath"
+                :default-value="record.uploadPath"
               />
             </div>
           </template>
 
-          <!--项目计划结束日期-->
-          <template #planFinishDate="{ record }">
+          <!--部署路径-->
+          <template #deployPath="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.planFinishDate }}
+              {{ record.deployPath }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.planFinishDate }}
+                {{ record.deployPath }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].planFinishDate
-                    ? crud.options.form[record.id].planFinishDate
-                    : record.planFinishDate
+                  crud.options.form[record.id].deployPath
+                    ? crud.options.form[record.id].deployPath
+                    : record.deployPath
                 }}
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-date-picker
-                v-model="crud.options.form[record.id].planFinishDate"
-                show-time
-                :default-value="record.planFinishDate"
-                format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%"
+              <a-input
+                v-model="crud.options.form[record.id].deployPath"
+                :default-value="record.deployPath"
               />
             </div>
           </template>
 
-          <!--实际开始日期-->
-          <template #actuStartDate="{ record }">
+          <!--备份路径-->
+          <template #backupPath="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.actuStartDate }}
+              {{ record.backupPath }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.actuStartDate }}
+                {{ record.backupPath }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].actuStartDate
-                    ? crud.options.form[record.id].actuStartDate
-                    : record.actuStartDate
+                  crud.options.form[record.id].backupPath
+                    ? crud.options.form[record.id].backupPath
+                    : record.backupPath
                 }}
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-date-picker
-                v-model="crud.options.form[record.id].actuStartDate"
-                show-time
-                :default-value="record.actuStartDate"
-                format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%"
+              <a-input
+                v-model="crud.options.form[record.id].backupPath"
+                :default-value="record.backupPath"
               />
             </div>
           </template>
 
-          <!--实际结束日期-->
-          <template #actuFinishDate="{ record }">
+          <!--应用端口-->
+          <template #port="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.actuFinishDate }}
+              {{ record.port }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.actuFinishDate }}
+                {{ record.port }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].actuFinishDate
-                    ? crud.options.form[record.id].actuFinishDate
-                    : record.actuFinishDate
+                  crud.options.form[record.id].port
+                    ? crud.options.form[record.id].port
+                    : record.port
                 }}
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-date-picker
-                v-model="crud.options.form[record.id].actuFinishDate"
-                show-time
-                :default-value="record.actuFinishDate"
-                format="YYYY-MM-DD HH:mm:ss"
-                style="width: 100%"
+              <a-input-number
+                v-model="crud.options.form[record.id].port"
+                :default-value="record.port"
               />
             </div>
           </template>
 
-          <!--状态-->
-          <template #enabled="{ record }">
-            <div>
-              <a-switch
-                v-model="record.enabled"
-                :loading="enabled.loading.value"
-                @change="enableEnabledChange(record)"
-              >
-                <template #checked>{{
-                    dict.user_status
-                      ? dict.user_status.filter(
-                        (di) => di.value === '1' || di.value === 'true'
-                      )[0].label
-                      : ''
-                  }}</template>
-                <template #unchecked>{{
-                    dict.user_status
-                      ? dict.user_status.filter(
-                        (di) => di.value === '0' || di.value === 'false'
-                      )[0].label
-                      : ''
-                  }}</template>
-              </a-switch>
+          <!--启动脚本-->
+          <template #startScript="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.startScript }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.startScript }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].startScript
+                    ? crud.options.form[record.id].startScript
+                    : record.startScript
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input
+                v-model="crud.options.form[record.id].startScript"
+                :default-value="record.startScript"
+              />
+            </div>
+          </template>
+
+          <!--部署脚本-->
+          <template #deployScript="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.deployScript }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.deployScript }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].deployScript
+                    ? crud.options.form[record.id].deployScript
+                    : record.deployScript
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input
+                v-model="crud.options.form[record.id].deployScript"
+                :default-value="record.deployScript"
+              />
+            </div>
+          </template>
+
+          <!--项目ID-->
+          <template #projectId="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.projectId }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.projectId }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].projectId
+                    ? crud.options.form[record.id].projectId
+                    : record.projectId
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input-number
+                v-model="crud.options.form[record.id].projectId"
+                :default-value="record.projectId"
+              />
             </div>
           </template>
         </a-table>
@@ -448,21 +471,19 @@
 
 <script lang="ts" setup>
 import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraProject } from '@/api/operation/project';
+import { OraApp } from '@/api/operation/app';
 import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
-import { useDict } from '@/components/dict';
 import CrudOperation from '@/components/crud/CrudOperation.vue';
 import RROperation from '@/components/crud/RROperation.vue'
 import Pagination from '@/components/crud/Pagination.vue';
 import axios from 'axios';
-import useLoading from '@/hooks/loading';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
-const crud = useCrud<OraProject>({
-  tag: '项目管理',
-  url: '/operation/project',
-  title: 'operation.project',
+const crud = useCrud<OraApp>({
+  tag: '应用管理',
+  url: '/operation/app',
+  title: 'operation.app',
   tableInfo: {
     componentConfig: {
       stripe: false,
@@ -473,12 +494,10 @@ provide('crud', crud);
 
 
 
-// 字典
-const dict = useDict('user_status');
 const instance = getCurrentInstance();
 const global = (instance as any).appContext.config.globalProperties;
 
-// 设置项目管理 columns信息
+// 设置应用管理 columns信息
 crud.update.setTableColumns([
   {
     title: t('crud.table.update.result'),
@@ -490,29 +509,65 @@ crud.update.setTableColumns([
     ignoreSwitch: true,
   },
   {
-    title: '项目名称',
-    dataIndex: 'pname',
+    title: '应用名称',
+    dataIndex: 'name',
     width: 150,
     display: true,
-    slotName: 'pname',
+    slotName: 'name',
     tooltip: true,
     ellipsis: true,
   },
   {
-    title: '项目计划开始日期',
-    dataIndex: 'planStartDate',
-    width: 180,
+    title: '上传目录',
+    dataIndex: 'uploadPath',
+    width: 150,
     display: true,
-    slotName: 'planStartDate',
+    slotName: 'uploadPath',
     tooltip: true,
     ellipsis: true,
   },
   {
-    title: '项目计划结束日期',
-    dataIndex: 'planFinishDate',
-    width: 180,
+    title: '部署路径',
+    dataIndex: 'deployPath',
+    width: 150,
     display: true,
-    slotName: 'planFinishDate',
+    slotName: 'deployPath',
+    tooltip: true,
+    ellipsis: true,
+  },
+  {
+    title: '备份路径',
+    dataIndex: 'backupPath',
+    width: 150,
+    display: true,
+    slotName: 'backupPath',
+    tooltip: true,
+    ellipsis: true,
+  },
+  {
+    title: '应用端口',
+    dataIndex: 'port',
+    width: 150,
+    display: true,
+    slotName: 'port',
+    tooltip: true,
+    ellipsis: true,
+  },
+  {
+    title: '启动脚本',
+    dataIndex: 'startScript',
+    width: 150,
+    display: true,
+    slotName: 'startScript',
+    tooltip: true,
+    ellipsis: true,
+  },
+  {
+    title: '部署脚本',
+    dataIndex: 'deployScript',
+    width: 150,
+    display: true,
+    slotName: 'deployScript',
     tooltip: true,
     ellipsis: true,
   },
@@ -535,7 +590,7 @@ crud.update.setTableColumns([
     ellipsis: true,
   },
   {
-    title: '创建时间',
+    title: '创建日期',
     dataIndex: 'createTime',
     width: 180,
     display: true,
@@ -553,29 +608,11 @@ crud.update.setTableColumns([
     ellipsis: true,
   },
   {
-    title: '实际开始日期',
-    dataIndex: 'actuStartDate',
-    width: 180,
+    title: '项目ID',
+    dataIndex: 'projectId',
+    width: 150,
     display: true,
-    slotName: 'actuStartDate',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '实际结束日期',
-    dataIndex: 'actuFinishDate',
-    width: 180,
-    display: true,
-    slotName: 'actuFinishDate',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '状态',
-    dataIndex: 'enabled',
-    width: 100,
-    display: true,
-    slotName: 'enabled',
+    slotName: 'projectId',
     tooltip: true,
     ellipsis: true,
   },
@@ -585,23 +622,6 @@ const tableColumns = computed(() => {
 });
 
 // region    ↓-------------------------------- switch --------------------------------↓
-// 状态loading
-const enabled = useLoading();
-// 状态状态改变
-const enableEnabledChange = async (record: any) => {
-  enabled.toggle();
-  const data = (await axios.put(crud.options.url, [
-    { id: record.id, enabled: record.enabled },
-  ])) as any;
-  if (data.code === 20000) {
-    global.$notification.success('更改成功');
-  } else {
-    global.$notification.warning(`更改失败:${data.msg}`);
-    record.enabled = !record.enabled;
-  }
-  enabled.toggle();
-};
-
 // endregion ↑-------------------------------- switch --------------------------------↑
 
 // region    ↓-------------------------------- rangePicker --------------------------------↓
@@ -616,6 +636,11 @@ onMounted(() => {
 // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
+<script lang="ts">
+export default {
+  name: 'App',
+};
+</script>
 <style scoped>
 .container {
   height: 100%;

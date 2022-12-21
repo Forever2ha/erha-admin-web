@@ -4,87 +4,75 @@
       <div style="position: relative; height: 100%">
         <!--查询表单-->
         <a-row :gutter="24" style="margin-bottom: 12px">
-          <!--名称搜索框-->
+          <!--没有查询字段，字段生成主键的查询方式-->
           <a-col :span="6">
-            <a-input
-              v-model="crud.options.query.name"
-              placeholder="输入名称搜索"
-            >
-              <template #prefix> Like </template>
-            </a-input>
-          </a-col>
-
-          <!--项目ID搜索框-->
-          <a-col :span="6">
+            <!--id搜索框-->
             <a-input-number
-              v-model="crud.options.query.projectId"
-              placeholder="输入项目ID搜索"
-            >
-              <template #prefix> = </template>
-            </a-input-number>
+              v-model="crud.options.query.historyId"
+              placeholder="输入id搜索"
+            />
           </a-col>
-
           <a-col :span="6">
             <RROperation />
           </a-col>
         </a-row>
         <CrudOperation
-          :add-permission="['oraServer:add']"
-          :edit-permission="['oraServer:edit']"
-          :del-permission="['oraServer:del']"
-          :download-permission="['oraServer:list']"
+          :add-permission="['oraDeployHistory:add']"
+          :edit-permission="['oraDeployHistory:edit']"
+          :del-permission="['oraDeployHistory:del']"
+          :download-permission="['oraDeployHistory:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>
             <a-row :gutter="12">
-              <!--账号-->
+              <!--应用名称-->
               <a-col :span="12">
                 <a-form-item
-                  field="account"
-                  label="账号"
-                  :rules="[{ required: true, message: '账号不能为空' }]"
+                  field="appName"
+                  label="应用名称"
                 >
-                  <a-input v-model="crud.options.form.account" />
+                  <a-input v-model="crud.options.form.appName" />
                 </a-form-item>
               </a-col>
-              <!--IP地址-->
+              <!--部署日期-->
+              <a-col :span="12">
+                <a-form-item
+                  field="deployDate"
+                  label="部署日期"
+                >
+                  <a-date-picker
+                    v-model="crud.options.form.deployDate"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    style="width: 100%"
+                  />
+                </a-form-item>
+              </a-col>
+              <!--部署用户-->
+              <a-col :span="12">
+                <a-form-item
+                  field="deployUser"
+                  label="部署用户"
+                >
+                  <a-input v-model="crud.options.form.deployUser" />
+                </a-form-item>
+              </a-col>
+              <!--服务器IP-->
               <a-col :span="12">
                 <a-form-item
                   field="ip"
-                  label="IP地址"
-                  :rules="[{ required: true, message: 'IP地址不能为空' }]"
+                  label="服务器IP"
                 >
                   <a-input v-model="crud.options.form.ip" />
                 </a-form-item>
               </a-col>
-              <!--名称-->
+              <!--部署编号-->
               <a-col :span="12">
                 <a-form-item
-                  field="name"
-                  label="名称"
-                  :rules="[{ required: true, message: '名称不能为空' }]"
+                  field="deployId"
+                  label="部署编号"
                 >
-                  <a-input v-model="crud.options.form.name" />
-                </a-form-item>
-              </a-col>
-              <!--密码-->
-              <a-col :span="12">
-                <a-form-item
-                  field="password"
-                  label="密码"
-                  :rules="[{ required: true, message: '密码不能为空' }]"
-                >
-                  <a-input v-model="crud.options.form.password" />
-                </a-form-item>
-              </a-col>
-              <!--端口-->
-              <a-col :span="12">
-                <a-form-item
-                  field="port"
-                  label="端口"
-                  :rules="[{ required: true, message: '端口不能为空' }]"
-                >
-                  <a-input-number v-model="crud.options.form.port" />
+                  <a-input-number v-model="crud.options.form.deployId" />
                 </a-form-item>
               </a-col>
               <!--项目ID-->
@@ -92,7 +80,6 @@
                 <a-form-item
                   field="projectId"
                   label="项目ID"
-                  :rules="[{ required: true, message: '项目ID不能为空' }]"
                 >
                   <a-input-number v-model="crud.options.form.projectId" />
                 </a-form-item>
@@ -181,25 +168,25 @@
             </div>
           </template>
 
-          <!--账号-->
-          <template #account="{ record }">
+          <!--应用名称-->
+          <template #appName="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.account }}
+              {{ record.appName }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.account }}
+                {{ record.appName }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].account
-                    ? crud.options.form[record.id].account
-                    : record.account
+                  crud.options.form[record.id].appName
+                    ? crud.options.form[record.id].appName
+                    : record.appName
                 }}
               </div>
             </div>
@@ -207,13 +194,80 @@
             <!--修改情况下-->
             <div v-if="record.editable">
               <a-input
-                v-model="crud.options.form[record.id].account"
-                :default-value="record.account"
+                v-model="crud.options.form[record.id].appName"
+                :default-value="record.appName"
               />
             </div>
           </template>
 
-          <!--IP地址-->
+          <!--部署日期-->
+          <template #deployDate="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.deployDate }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.deployDate }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].deployDate
+                    ? crud.options.form[record.id].deployDate
+                    : record.deployDate
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-date-picker
+                v-model="crud.options.form[record.id].deployDate"
+                show-time
+                :default-value="record.deployDate"
+                format="YYYY-MM-DD HH:mm:ss"
+                style="width: 100%"
+              />
+            </div>
+          </template>
+
+          <!--部署用户-->
+          <template #deployUser="{ record }">
+            <!--正常情况下-->
+            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
+              {{ record.deployUser }}
+            </div>
+
+            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
+            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
+              <!--未修改的行-->
+              <div v-show="!crud.options.form[record.id]">
+                {{ record.deployUser }}
+              </div>
+              <!--修改完毕提交后-->
+              <div v-if="crud.options.form[record.id]">
+                {{
+                  crud.options.form[record.id].deployUser
+                    ? crud.options.form[record.id].deployUser
+                    : record.deployUser
+                }}
+              </div>
+            </div>
+
+            <!--修改情况下-->
+            <div v-if="record.editable">
+              <a-input
+                v-model="crud.options.form[record.id].deployUser"
+                :default-value="record.deployUser"
+              />
+            </div>
+          </template>
+
+          <!--服务器IP-->
           <template #ip="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
@@ -245,89 +299,25 @@
             </div>
           </template>
 
-          <!--名称-->
-          <template #name="{ record }">
+          <!--部署编号-->
+          <template #deployId="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.name }}
+              {{ record.deployId }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.name }}
+                {{ record.deployId }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].name
-                    ? crud.options.form[record.id].name
-                    : record.name
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].name"
-                :default-value="record.name"
-              />
-            </div>
-          </template>
-
-          <!--密码-->
-          <template #password="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.password }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.password }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].password
-                    ? crud.options.form[record.id].password
-                    : record.password
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input
-                v-model="crud.options.form[record.id].password"
-                :default-value="record.password"
-              />
-            </div>
-          </template>
-
-          <!--端口-->
-          <template #port="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.port }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.port }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].port
-                    ? crud.options.form[record.id].port
-                    : record.port
+                  crud.options.form[record.id].deployId
+                    ? crud.options.form[record.id].deployId
+                    : record.deployId
                 }}
               </div>
             </div>
@@ -335,8 +325,8 @@
             <!--修改情况下-->
             <div v-if="record.editable">
               <a-input-number
-                v-model="crud.options.form[record.id].port"
-                :default-value="record.port"
+                v-model="crud.options.form[record.id].deployId"
+                :default-value="record.deployId"
               />
             </div>
           </template>
@@ -382,166 +372,130 @@
 </template>
 
 <script lang="ts" setup>
-import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-import { OraServer } from '@/api/operation/server';
-import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
-import CrudOperation from '@/components/crud/CrudOperation.vue';
-import RROperation from '@/components/crud/RROperation.vue'
-import Pagination from '@/components/crud/Pagination.vue';
-import axios from 'axios';
-import { useI18n } from 'vue-i18n';
+  import { useCrud, CrudStatus } from '@/components/crud/CRUD';
+  import { OraDeployHistory } from '@/api/operation/history';
+  import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
+  import CrudOperation from '@/components/crud/CrudOperation.vue';
+  import RROperation from '@/components/crud/RROperation.vue'
+  import Pagination from '@/components/crud/Pagination.vue';
+  import axios from 'axios';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const crud = useCrud<OraServer>({
-  tag: '服务器',
-  url: '/operation/server',
-  title: 'operation.server',
-  tableInfo: {
-    componentConfig: {
-      stripe: false,
+  const { t } = useI18n();
+  const crud = useCrud<OraDeployHistory>({
+    tag: '部署管理',
+    url: '/operation/history',
+    title: 'operation.history',
+    tableInfo: {
+      componentConfig: {
+        stripe: false,
+      },
     },
-  },
-});
-provide('crud', crud);
+  });
+  provide('crud', crud);
 
 
 
-const instance = getCurrentInstance();
-const global = (instance as any).appContext.config.globalProperties;
+  const instance = getCurrentInstance();
+  const global = (instance as any).appContext.config.globalProperties;
 
-// 设置服务器 columns信息
-crud.update.setTableColumns([
-  {
-    title: t('crud.table.update.result'),
-    dataIndex: 'result',
-    width: 90,
-    display: false,
-    fixed: 'left',
-    slotName: 'result',
-    ignoreSwitch: true,
-  },
-  {
-    title: '账号',
-    dataIndex: 'account',
-    width: 150,
-    display: true,
-    slotName: 'account',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: 'IP地址',
-    dataIndex: 'ip',
-    width: 150,
-    display: true,
-    slotName: 'ip',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    width: 150,
-    display: true,
-    slotName: 'name',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '密码',
-    dataIndex: 'password',
-    width: 150,
-    display: true,
-    slotName: 'password',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '端口',
-    dataIndex: 'port',
-    width: 150,
-    display: true,
-    slotName: 'port',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建者',
-    dataIndex: 'createBy',
-    width: 150,
-    display: true,
-    slotName: 'createBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新者',
-    dataIndex: 'updateBy',
-    width: 150,
-    display: true,
-    slotName: 'updateBy',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: 180,
-    display: true,
-    slotName: 'createTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'updateTime',
-    width: 180,
-    display: true,
-    slotName: 'updateTime',
-    tooltip: true,
-    ellipsis: true,
-  },
-  {
-    title: '项目ID',
-    dataIndex: 'projectId',
-    width: 150,
-    display: true,
-    slotName: 'projectId',
-    tooltip: true,
-    ellipsis: true,
-  },
-]);
-const tableColumns = computed(() => {
-  return crud.options.tableInfo.columns?.filter((val) => val.display);
-});
+  // 设置部署管理 columns信息
+  crud.update.setTableColumns([
+    {
+      title: t('crud.table.update.result'),
+      dataIndex: 'result',
+      width: 90,
+      display: false,
+      fixed: 'left',
+      slotName: 'result',
+      ignoreSwitch: true,
+    },
+    {
+      title: '应用名称',
+      dataIndex: 'appName',
+      width: 150,
+      display: true,
+      slotName: 'appName',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '部署日期',
+      dataIndex: 'deployDate',
+      width: 180,
+      display: true,
+      slotName: 'deployDate',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '部署用户',
+      dataIndex: 'deployUser',
+      width: 150,
+      display: true,
+      slotName: 'deployUser',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '服务器IP',
+      dataIndex: 'ip',
+      width: 150,
+      display: true,
+      slotName: 'ip',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '部署编号',
+      dataIndex: 'deployId',
+      width: 150,
+      display: true,
+      slotName: 'deployId',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '项目ID',
+      dataIndex: 'projectId',
+      width: 150,
+      display: true,
+      slotName: 'projectId',
+      tooltip: true,
+      ellipsis: true,
+    },
+  ]);
+  const tableColumns = computed(() => {
+    return crud.options.tableInfo.columns?.filter((val) => val.display);
+  });
 
-// region    ↓-------------------------------- switch --------------------------------↓
-// endregion ↑-------------------------------- switch --------------------------------↑
+  // region    ↓-------------------------------- switch --------------------------------↓
+  // endregion ↑-------------------------------- switch --------------------------------↑
 
-// region    ↓-------------------------------- rangePicker --------------------------------↓
-// endregion ↑-------------------------------- rangePicker --------------------------------↑
+  // region    ↓-------------------------------- rangePicker --------------------------------↓
+  // endregion ↑-------------------------------- rangePicker --------------------------------↑
 
-// region    ↓-------------------------------- 钩子 --------------------------------↓
-onMounted(() => {
-  crud.method.refresh();
-});
+  // region    ↓-------------------------------- 钩子 --------------------------------↓
+  onMounted(() => {
+    crud.method.refresh();
+  });
 
 
-// endregion ↑-------------------------------- 钩子 --------------------------------↑
+  // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 
 <style scoped>
-.container {
-  height: 100%;
-  padding: 16px 20px;
-  padding-bottom: 0;
-  background-color: var(--color-fill-2);
-}
+  .container {
+    height: 100%;
+    padding: 16px 20px;
+    padding-bottom: 0;
+    background-color: var(--color-fill-2);
+  }
 
-.panel {
-  height: 100%;
-  padding: 16px;
-  background-color: var(--color-bg-2);
-  border-radius: 4px;
-}
+  .panel {
+    height: 100%;
+    padding: 16px;
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
+  }
 </style>
