@@ -3,19 +3,65 @@
     <div class="panel">
       <div style="position: relative; height: 100%">
         <!--查询表单-->
-        <a-row :gutter="24" style="margin-bottom: 12px">
-          <!--没有查询字段，字段生成主键的查询方式-->
-          <a-col :span="6">
-            <!--id搜索框-->
-            <a-input-number
-              v-model="crud.options.query.projectId"
-              placeholder="输入id搜索"
-            />
+        <a-row>
+          <a-col :flex="1">
+            <a-form
+              :model="crud.options.query"
+              :label-col-props="{ span: 6 }"
+              :wrapper-col-props="{ span: 18 }"
+              label-align="left"
+            >
+              <a-scrollbar style="height: 104px; overflow: auto">
+                <a-row :gutter="16" style="width: 100%">
+                  <!--项目名称搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="pname" label="项目名称">
+                      <a-input
+                        v-model="crud.options.query.pname"
+                        placeholder="输入项目名称搜索"
+                      >
+                        <template #prefix> Like </template>
+                      </a-input>
+                    </a-form-item>
+                  </a-col>
+                  <!--创建者搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="createBy" label="创建者">
+                      <a-input
+                        v-model="crud.options.query.createBy"
+                        placeholder="输入创建者搜索"
+                      >
+                        <template #prefix> Like </template>
+                      </a-input>
+                    </a-form-item>
+                  </a-col>
+                  <!--状态搜索框-->
+                  <a-col :span="8">
+                    <a-form-item field="enabled" label="状态">
+                      <a-select
+                        v-model="crud.options.query.enabled"
+                        placeholder="输入状态搜索"
+                      >
+                        <a-option
+                          v-for="s in dict.user_status"
+                          :key="s.detailId"
+                          :value="s.value"
+                        >
+                          {{ s.label }}
+                        </a-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-col>
+                </a-row>
+              </a-scrollbar>
+            </a-form>
           </a-col>
-          <a-col :span="6">
-            <RROperation />
+          <a-divider style="height: 84px" direction="vertical" />
+          <a-col :flex="'86px'" style="text-align: right">
+            <RROperation direction="vertical" />
           </a-col>
         </a-row>
+        <a-divider style="margin-top: 0" />
         <CrudOperation
           :add-permission="['oraProject:add']"
           :edit-permission="['oraProject:edit']"
@@ -27,19 +73,13 @@
             <a-row :gutter="12">
               <!--项目名称-->
               <a-col :span="12">
-                <a-form-item
-                  field="pname"
-                  label="项目名称"
-                >
+                <a-form-item field="pname" label="项目名称">
                   <a-input v-model="crud.options.form.pname" />
                 </a-form-item>
               </a-col>
               <!--项目计划开始日期-->
               <a-col :span="12">
-                <a-form-item
-                  field="planStartDate"
-                  label="项目计划开始日期"
-                >
+                <a-form-item field="planStartDate" label="项目计划开始日期">
                   <a-date-picker
                     v-model="crud.options.form.planStartDate"
                     show-time
@@ -50,10 +90,7 @@
               </a-col>
               <!--项目计划结束日期-->
               <a-col :span="12">
-                <a-form-item
-                  field="planFinishDate"
-                  label="项目计划结束日期"
-                >
+                <a-form-item field="planFinishDate" label="项目计划结束日期">
                   <a-date-picker
                     v-model="crud.options.form.planFinishDate"
                     show-time
@@ -64,10 +101,7 @@
               </a-col>
               <!--实际开始日期-->
               <a-col :span="12">
-                <a-form-item
-                  field="actuStartDate"
-                  label="实际开始日期"
-                >
+                <a-form-item field="actuStartDate" label="实际开始日期">
                   <a-date-picker
                     v-model="crud.options.form.actuStartDate"
                     show-time
@@ -78,10 +112,7 @@
               </a-col>
               <!--实际结束日期-->
               <a-col :span="12">
-                <a-form-item
-                  field="actuFinishDate"
-                  label="实际结束日期"
-                >
+                <a-form-item field="actuFinishDate" label="实际结束日期">
                   <a-date-picker
                     v-model="crud.options.form.actuFinishDate"
                     show-time
@@ -90,12 +121,9 @@
                   />
                 </a-form-item>
               </a-col>
-              <!--状态：1启用、0禁用-->
+              <!--状态-->
               <a-col :span="12">
-                <a-form-item
-                  field="enabled"
-                  label="状态：1启用、0禁用"
-                >
+                <a-form-item field="enabled" label="状态">
                   <a-radio-group
                     v-model="crud.options.form.enabled"
                     type="button"
@@ -139,7 +167,7 @@
                 }
               : undefined
           "
-          style="height: calc(100% - 128px); margin-bottom: 12px"
+          style="height: calc(100% - 209px); margin-bottom: 12px"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -365,7 +393,7 @@
             </div>
           </template>
 
-          <!--状态：1启用、0禁用-->
+          <!--状态-->
           <template #enabled="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
@@ -422,7 +450,7 @@
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import { useDict } from '@/components/dict';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
-  import RROperation from '@/components/crud/RROperation.vue'
+  import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
   import axios from 'axios';
   import { useI18n } from 'vue-i18n';
@@ -439,8 +467,6 @@
     },
   });
   provide('crud', crud);
-
-
 
   // 字典
   const dict = useDict('user_status');
@@ -540,7 +566,7 @@
       ellipsis: true,
     },
     {
-      title: '状态：1启用、0禁用',
+      title: '状态',
       dataIndex: 'enabled',
       width: 150,
       display: true,
@@ -563,7 +589,6 @@
   onMounted(() => {
     crud.method.refresh();
   });
-
 
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
