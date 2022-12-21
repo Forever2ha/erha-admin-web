@@ -43,7 +43,6 @@
         v-model="form[record.columnId].formType"
         placeholder="请选择"
         :default-value="record.formType"
-        v
       >
         <a-option value="">空</a-option>
         <a-option>文本框</a-option>
@@ -79,7 +78,6 @@
         v-model="form[record.columnId].dateAnnotation"
         placeholder="请选择"
         :default-value="record.dateAnnotation"
-        v
       >
         <a-option value="">空</a-option>
         <a-option>自动创建时间</a-option>
