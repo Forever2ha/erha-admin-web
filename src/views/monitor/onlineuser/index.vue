@@ -103,12 +103,12 @@
           :show-add="false"
           :show-del="false"
           :show-edit="false"
-          :download-permission="['onlineUser:list']"
+          :download-permission="['monitor:onlineUser:list']"
           style="margin-bottom: 12px"
         >
           <template #left>
             <a-button
-              v-permission="['onlineUser:del']"
+              v-permission="['monitor:onlineUser:del']"
               :loading="loading"
               type="outline"
               size="small"
@@ -153,7 +153,7 @@
         >
           <template #operate="{ record }">
             <a-button
-              v-permission="['onlineUser:del']"
+              v-permission="['monitor:onlineUser:del']"
               :loading="loading"
               type="outline"
               size="mini"

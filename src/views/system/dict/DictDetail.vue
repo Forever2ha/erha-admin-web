@@ -110,7 +110,7 @@
         >
         <a-button
           v-if="!crud.options.tableInfo.isEdit"
-          v-permission="['dictDetail:add']"
+          v-permission="['system:dictDetail:add']"
           :disabled="clickDictName === ''"
           type="outline"
           size="mini"
@@ -119,7 +119,7 @@
         >
         <a-button
           v-if="!crud.options.tableInfo.isEdit"
-          v-permission="['dictDetail:edit']"
+          v-permission="['system:dictDetail:edit']"
           type="outline"
           status="success"
           size="mini"
@@ -133,7 +133,7 @@
         >
           <a-button
             v-if="!crud.options.tableInfo.isEdit"
-            v-permission="['dictDetail:del']"
+            v-permission="['system:dictDetail:del']"
             type="outline"
             size="mini"
             status="danger"
@@ -145,7 +145,7 @@
 
         <a-button
           v-if="!crud.options.tableInfo.isEdit"
-          v-permission="['dictDetail:list']"
+          v-permission="['system:dictDetail:list']"
           :disabled="clickDictName === ''"
           status="warning"
           type="outline"

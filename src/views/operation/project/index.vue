@@ -63,10 +63,10 @@
         </a-row>
         <a-divider style="margin-top: 0" />
         <CrudOperation
-          :add-permission="['oraProject:add']"
-          :edit-permission="['oraProject:edit']"
-          :del-permission="['oraProject:del']"
-          :download-permission="['oraProject:list']"
+          :add-permission="['operation:oraProject:add']"
+          :edit-permission="['operation:oraProject:edit']"
+          :del-permission="['operation:oraProject:del']"
+          :download-permission="['operation:oraProject:list']"
           style="margin-bottom: 12px"
         >
           <template #addForm>

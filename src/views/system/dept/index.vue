@@ -34,10 +34,10 @@
 
         <!--crudOperation-->
         <CrudOperation
-          :add-permission="['dept:list']"
-          :edit-permission="['dept:edit']"
-          :del-permission="['dept:del']"
-          :download-permission="['dept:list']"
+          :add-permission="['system:dept:list']"
+          :edit-permission="['system:dept:edit']"
+          :del-permission="['system:dept:del']"
+          :download-permission="['system:dept:list']"
           style="margin-bottom: 12px"
         >
           <!--添加部门表单-->

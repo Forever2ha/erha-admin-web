@@ -20,10 +20,10 @@
     <!--crudOperation-->
     <CrudOperation
       :disable-all="dictDetailIsEdit"
-      :add-permission="['dict:list']"
-      :edit-permission="['dict:edit']"
-      :del-permission="['dict:del']"
-      :download-permission="['dict:list']"
+      :add-permission="['system:dict:list']"
+      :edit-permission="['system:dict:edit']"
+      :del-permission="['system:dict:del']"
+      :download-permission="['system:dict:list']"
       style="margin-bottom: 12px"
     >
       <template #addForm>
