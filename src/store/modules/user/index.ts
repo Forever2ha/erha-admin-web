@@ -28,6 +28,11 @@ const useUserStore = defineStore('user', {
       state.roles?.forEach((r) => roleNames.push(r.name as string));
       return roleNames;
     },
+    userPermissions(state: UserState): string[] {
+      const per: string[] = [];
+      state.permissions?.forEach((p) => per.push(p));
+      return per;
+    },
   },
 
   actions: {

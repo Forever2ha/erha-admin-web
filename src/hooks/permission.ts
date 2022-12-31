@@ -11,8 +11,8 @@ export default function usePermission() {
         !route.meta?.roles || // 不需要角色放行
         route.meta?.roles?.includes('*') || // 所有角色放行
         route.meta?.roles?.some((val) => {
-          // 用户的角色在路由允许的角色中放行
-          return userStore.userRolesName?.includes(val);
+          // 有权限的放行
+          return userStore.userPermissions?.includes(val);
         })
       );
     },

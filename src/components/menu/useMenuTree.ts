@@ -8,22 +8,7 @@ export default function useMenuTree() {
   const permission = usePermission();
   const appStore = useAppStore();
   const appRoute = computed(() => {
-    if (appStore.menuFromServer) {
-      return appStore.appServerMenuConfig;
-    }
-    return router
-      .getRoutes()
-      .filter((el) => el.meta.requiresAuth && el.meta.order !== undefined)
-      .map((el) => {
-        const { name, path, meta, redirect, children } = el;
-        return {
-          name,
-          path,
-          meta,
-          redirect,
-          children,
-        };
-      });
+    return appStore.appServerMenuConfig;
   });
   const menuTree = computed(() => {
     const copyRouter = JSON.parse(JSON.stringify(appRoute.value));
