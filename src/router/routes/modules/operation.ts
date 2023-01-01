@@ -12,7 +12,7 @@ export default {
     },
     {
       path: 'Server',
-      name: 'Server',
+      name: 'OperServer',
       component: () => import('@/views/operation/server/index.vue'),
     },
     {
