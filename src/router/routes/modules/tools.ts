@@ -10,5 +10,10 @@ export default {
       name: 'Generate',
       component: () => import('@/views/tools/generate/index.vue'),
     },
+    {
+      path: 'storage',
+      name: 'Storage',
+      component: () => import('@/views/tools/storage/index.vue'),
+    },
   ],
 };

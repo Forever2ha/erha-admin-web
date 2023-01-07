@@ -1,5 +1,8 @@
 export default {
   'menu.tools': 'System Tools',
+  // storage
+  'menu.tools.storage': 'storage',
+  'tools.storage': 'storage',
   // generate
   'menu.tools.generate': 'Code Generate',
   'tools.generate.table.tableName': 'tableName',

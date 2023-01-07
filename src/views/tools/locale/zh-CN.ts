@@ -1,5 +1,8 @@
 export default {
   'menu.tools': '系统工具',
+  // storage
+  'menu.tools.storage': '存储管理',
+  'tools.storage': '文件',
   // generate
   'menu.tools.generate': '代码生成',
   'tools.generate.table.tableName': '表格名称',
