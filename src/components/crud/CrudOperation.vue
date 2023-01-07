@@ -283,6 +283,8 @@
   const addForm = ref(null);
   const rootDiv = ref(null);
 
+  // 暴露addForm的显示属性
+  defineExpose({ addVisible });
   const handleBeforeOpen = () => {
     if (!crud.hook.beforeOpenAdd()) {
       addVisible.value = false;
