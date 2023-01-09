@@ -63,7 +63,8 @@ axios.interceptors.response.use(
       if ([40004, 40000].includes(res.code)) {
         Message.error({
           content: `${res.msg}:${res.data ? res.data : ''}` || 'Error',
-          duration: 5 * 1000,
+          duration: 20 * 1000,
+          closable: true,
         });
         return Promise.reject(new Error((res.data as string) || 'Error'));
       }
