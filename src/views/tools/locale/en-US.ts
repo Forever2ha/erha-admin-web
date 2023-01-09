@@ -3,6 +3,8 @@ export default {
   // storage
   'menu.tools.storage': 'storage',
   'tools.storage': 'storage',
+  'tools.storage.qiniu': 'qiniuFile',
+  'tools.storage.qiniuConfig': 'qiniuConfig',
   // generate
   'menu.tools.generate': 'Code Generate',
   'tools.generate.table.tableName': 'tableName',

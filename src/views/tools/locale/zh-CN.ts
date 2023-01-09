@@ -3,6 +3,8 @@ export default {
   // storage
   'menu.tools.storage': '存储管理',
   'tools.storage': '文件',
+  'tools.storage.qiniu': '七牛云文件',
+  'tools.storage.qiniuConfig': '七牛云配置',
   // generate
   'menu.tools.generate': '代码生成',
   'tools.generate.table.tableName': '表格名称',
