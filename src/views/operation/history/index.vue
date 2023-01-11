@@ -400,6 +400,15 @@
       ellipsis: true,
     },
     {
+      title: '文件名',
+      dataIndex: 'fileName',
+      width: 200,
+      display: true,
+      slotName: 'fileName',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
       title: '部署日期',
       dataIndex: 'deployDate',
       width: 180,
