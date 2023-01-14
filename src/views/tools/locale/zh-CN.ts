@@ -1,5 +1,8 @@
 export default {
   'menu.tools': '系统工具',
+  // email
+  'menu.tools.email': '邮件工具',
+  'tools.email': '邮件配置',
   // storage
   'menu.tools.storage': '存储管理',
   'tools.storage': '文件',

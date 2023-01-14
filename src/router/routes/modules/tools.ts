@@ -15,5 +15,10 @@ export default {
       name: 'Storage',
       component: () => import('@/views/tools/storage/index.vue'),
     },
+    {
+      path: 'email',
+      name: 'Email',
+      component: () => import('@/views/tools/email/index.vue'),
+    },
   ],
 };

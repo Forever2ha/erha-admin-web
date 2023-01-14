@@ -34,6 +34,8 @@
     "@highlightjs/vue-plugin": "^2.1.0",
     "@types/mockjs": "^1.0.4",
     "@vueuse/core": "^7.3.0",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "arco-design-pro-vue": "^2.5.8",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",

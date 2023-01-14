@@ -1,5 +1,8 @@
 export default {
   'menu.tools': 'System Tools',
+  // email
+  'menu.tools.email': 'email',
+  'tools.email': 'email',
   // storage
   'menu.tools.storage': 'storage',
   'tools.storage': 'storage',
