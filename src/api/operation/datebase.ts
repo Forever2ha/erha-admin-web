@@ -7,6 +7,5 @@ export interface OraDatabase {
   updateBy: string;
   createTime: string;
   updateTime: string;
-  projectId: number;
   typeDatabese: string;
 }

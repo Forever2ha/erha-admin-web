@@ -6,32 +6,27 @@ export default {
   component: DEFAULT_LAYOUT,
   children: [
     {
-      path: 'project',
-      name: 'Project',
-      component: () => import('@/views/operation/project/index.vue'),
-    },
-    {
-      path: 'Server',
+      path: 'server',
       name: 'OperServer',
       component: () => import('@/views/operation/server/index.vue'),
     },
     {
-      path: 'App',
+      path: 'app',
       name: 'App',
       component: () => import('@/views/operation/app/index.vue'),
     },
     {
-      path: 'Deploy',
+      path: 'deploy',
       name: 'Deploy',
       component: () => import('@/views/operation/deploy/index.vue'),
     },
     {
-      path: 'History',
+      path: 'history',
       name: 'History',
       component: () => import('@/views/operation/history/index.vue'),
     },
     {
-      path: 'Database',
+      path: 'database',
       name: 'Database',
       component: () => import('@/views/operation/database/index.vue'),
     },

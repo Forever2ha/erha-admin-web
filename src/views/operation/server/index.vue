@@ -14,16 +14,6 @@
             </a-input>
           </a-col>
 
-          <!--项目ID搜索框-->
-          <a-col :span="6">
-            <a-input-number
-              v-model="crud.options.query.projectId"
-              placeholder="输入项目ID搜索"
-            >
-              <template #prefix> = </template>
-            </a-input-number>
-          </a-col>
-
           <a-col :span="6">
             <RROperation />
           </a-col>
@@ -37,8 +27,18 @@
         >
           <template #addForm>
             <a-row :gutter="12">
+              <!--名称-->
+              <a-col :span="24">
+                <a-form-item
+                  field="name"
+                  label="名称"
+                  :rules="[{ required: true, message: '名称不能为空' }]"
+                >
+                  <a-input v-model="crud.options.form.name" />
+                </a-form-item>
+              </a-col>
               <!--账号-->
-              <a-col :span="12">
+              <a-col :span="24">
                 <a-form-item
                   field="account"
                   label="账号"
@@ -48,7 +48,7 @@
                 </a-form-item>
               </a-col>
               <!--IP地址-->
-              <a-col :span="12">
+              <a-col :span="24">
                 <a-form-item
                   field="ip"
                   label="IP地址"
@@ -57,24 +57,17 @@
                   <a-input v-model="crud.options.form.ip" />
                 </a-form-item>
               </a-col>
-              <!--名称-->
-              <a-col :span="12">
-                <a-form-item
-                  field="name"
-                  label="名称"
-                  :rules="[{ required: true, message: '名称不能为空' }]"
-                >
-                  <a-input v-model="crud.options.form.name" />
-                </a-form-item>
-              </a-col>
               <!--密码-->
-              <a-col :span="12">
+              <a-col :span="24">
                 <a-form-item
                   field="password"
                   label="密码"
                   :rules="[{ required: true, message: '密码不能为空' }]"
                 >
-                  <a-input v-model="crud.options.form.password" />
+                  <a-input
+                    v-model="crud.options.form.password"
+                    type="password"
+                  />
                 </a-form-item>
               </a-col>
               <!--端口-->
@@ -87,15 +80,13 @@
                   <a-input-number v-model="crud.options.form.port" />
                 </a-form-item>
               </a-col>
-              <!--项目ID-->
               <a-col :span="12">
-                <a-form-item
-                  field="projectId"
-                  label="项目ID"
-                  :rules="[{ required: true, message: '项目ID不能为空' }]"
+                <a-button
+                  status="success"
+                  :loading="connect.loading.value"
+                  @click="testConnectClick"
+                  >测试连接</a-button
                 >
-                  <a-input-number v-model="crud.options.form.projectId" />
-                </a-form-item>
               </a-col>
             </a-row>
           </template>
@@ -281,23 +272,15 @@
           <template #password="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.password }}
+              ******
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.password }}
-              </div>
+              <div v-show="!crud.options.form[record.id]"> ****** </div>
               <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].password
-                    ? crud.options.form[record.id].password
-                    : record.password
-                }}
-              </div>
+              <div v-if="crud.options.form[record.id]"> ****** </div>
             </div>
 
             <!--修改情况下-->
@@ -305,6 +288,7 @@
               <a-input
                 v-model="crud.options.form[record.id].password"
                 :default-value="record.password"
+                type="password"
               />
             </div>
           </template>
@@ -340,38 +324,6 @@
               />
             </div>
           </template>
-
-          <!--项目ID-->
-          <template #projectId="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.projectId }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.projectId }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].projectId
-                    ? crud.options.form[record.id].projectId
-                    : record.projectId
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input-number
-                v-model="crud.options.form[record.id].projectId"
-                :default-value="record.projectId"
-              />
-            </div>
-          </template>
         </a-table>
         <Pagination
           style="position: absolute; right: 0; bottom: 0; padding-right: 7px"
@@ -383,13 +335,15 @@
 
 <script lang="ts" setup>
   import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-  import { OraServer } from '@/api/operation/server';
+  import { OraServer, testConnect } from '@/api/operation/server';
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
   import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
   import axios from 'axios';
   import { useI18n } from 'vue-i18n';
+  import useLoading from '@/hooks/loading';
+  import { Message } from '@arco-design/web-vue';
 
   const { t } = useI18n();
   const crud = useCrud<OraServer>({
@@ -419,6 +373,15 @@
       ignoreSwitch: true,
     },
     {
+      title: '名称',
+      dataIndex: 'name',
+      width: 150,
+      display: true,
+      slotName: 'name',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
       title: '账号',
       dataIndex: 'account',
       width: 150,
@@ -433,15 +396,6 @@
       width: 150,
       display: true,
       slotName: 'ip',
-      tooltip: true,
-      ellipsis: true,
-    },
-    {
-      title: '名称',
-      dataIndex: 'name',
-      width: 150,
-      display: true,
-      slotName: 'name',
       tooltip: true,
       ellipsis: true,
     },
@@ -499,25 +453,28 @@
       tooltip: true,
       ellipsis: true,
     },
-    {
-      title: '项目ID',
-      dataIndex: 'projectId',
-      width: 150,
-      display: true,
-      slotName: 'projectId',
-      tooltip: true,
-      ellipsis: true,
-    },
   ]);
   const tableColumns = computed(() => {
     return crud.options.tableInfo.columns?.filter((val) => val.display);
   });
 
-  // region    ↓-------------------------------- switch --------------------------------↓
-  // endregion ↑-------------------------------- switch --------------------------------↑
+  const connect = useLoading(false);
+  const testConnectClick = async () => {
+    connect.toggle();
 
-  // region    ↓-------------------------------- rangePicker --------------------------------↓
-  // endregion ↑-------------------------------- rangePicker --------------------------------↑
+    try {
+      const data = await testConnect(crud.options.form);
+      if (data.data) {
+        Message.success('连接成功！');
+      } else {
+        Message.error(`连接失败，请检查配置`);
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    connect.toggle();
+  };
 
   // region    ↓-------------------------------- 钩子 --------------------------------↓
   onMounted(() => {

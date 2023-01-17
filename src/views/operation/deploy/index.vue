@@ -1,61 +1,75 @@
 <template>
   <div class="container">
+    <!--一键部署上传文件-->
+    <a-modal
+      :visible="showUpload"
+      width="580px"
+      @cancel="showUpload = false"
+      @ok="uploadFile"
+    >
+      <template #title> 一键部署 </template>
+      <a-upload
+        ref="upload"
+        v-model:file-list="fileItems"
+        :custom-request="customRequest"
+        :auto-upload="false"
+        :limit="1"
+      >
+        <template #upload-button>
+          <div
+            style="
+              width: 540px;
+              height: 158px;
+              color: var(--color-text-1);
+              line-height: 158px;
+              text-align: center;
+              background-color: var(--color-fill-2);
+              border: 1px dashed var(--color-fill-4);
+              border-radius: 2px;
+            "
+          >
+            <div>
+              拖拽文件到此 或者
+              <span style="color: #3370ff">点击上传</span>
+            </div>
+          </div>
+        </template>
+      </a-upload>
+    </a-modal>
     <div class="panel">
       <div style="position: relative; height: 100%">
         <!--查询表单-->
-        <a-row>
-          <a-col :flex="1">
-            <a-form
-              :model="crud.options.query"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              label-align="left"
+        <a-row :gutter="24" style="margin-bottom: 12px">
+          <!--应用编号搜索框-->
+          <a-col :span="6">
+            <a-select
+              v-model="crud.options.query.appId"
+              placeholder="选择应用编号搜索"
             >
-              <a-scrollbar style="height: 104px; overflow: auto">
-                <a-row :gutter="16" style="width: 100%">
-                  <!--应用编号搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="appId" label="应用编号">
-                      <a-input-number
-                        v-model="crud.options.query.appId"
-                        placeholder="输入应用编号搜索"
-                      >
-                        <template #prefix> Like </template>
-                      </a-input-number>
-                    </a-form-item>
-                  </a-col>
-                  <!--项目ID搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="projectId" label="项目ID">
-                      <a-input-number
-                        v-model="crud.options.query.projectId"
-                        placeholder="输入项目ID搜索"
-                      >
-                        <template #prefix> = </template>
-                      </a-input-number>
-                    </a-form-item>
-                  </a-col>
-                  <!--服务器搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="serverId" label="服务器">
-                      <a-input-number
-                        v-model="crud.options.query.serverId"
-                        placeholder="输入服务器搜索"
-                      >
-                        <template #prefix> = </template>
-                      </a-input-number>
-                    </a-form-item>
-                  </a-col>
-                </a-row>
-              </a-scrollbar>
-            </a-form>
+              <a-option v-for="app in appMap" :key="app.id" :value="app.id">
+                {{ app.name }}
+              </a-option>
+            </a-select>
           </a-col>
-          <a-divider style="height: 84px" direction="vertical" />
-          <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical" />
+          <!--服务器搜索框-->
+          <a-col :span="6">
+            <a-select
+              v-model="crud.options.query.serverId"
+              placeholder="选择服务器搜索"
+            >
+              <a-option
+                v-for="server in serverMap"
+                :key="server.id"
+                :value="server.id"
+              >
+                {{ server.name }}
+              </a-option>
+            </a-select>
+          </a-col>
+          <a-col :span="6">
+            <RROperation />
           </a-col>
         </a-row>
-        <a-divider style="margin-top: 0" />
         <CrudOperation
           :add-permission="['operation:oraDeploy:add']"
           :edit-permission="['operation:oraDeploy:edit']"
@@ -66,36 +80,106 @@
           <template #addForm>
             <a-row :gutter="12">
               <!--应用编号-->
-              <a-col :span="12">
+              <a-col :span="24">
                 <a-form-item
                   field="appId"
                   label="应用编号"
                   :rules="[{ required: true, message: '应用编号不能为空' }]"
                 >
-                  <a-input-number v-model="crud.options.form.appId" />
-                </a-form-item>
-              </a-col>
-              <!--项目ID-->
-              <a-col :span="12">
-                <a-form-item
-                  field="projectId"
-                  label="项目ID"
-                  :rules="[{ required: true, message: '项目ID不能为空' }]"
-                >
-                  <a-input-number v-model="crud.options.form.projectId" />
+                  <a-select v-model="crud.options.form.appId">
+                    <a-option
+                      v-for="(app, index) in appMap"
+                      :key="index"
+                      :value="index"
+                    >
+                      {{ app.name }}
+                    </a-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
               <!--服务器-->
-              <a-col :span="12">
+              <a-col :span="24">
                 <a-form-item
                   field="serverId"
                   label="服务器"
                   :rules="[{ required: true, message: '服务器不能为空' }]"
                 >
-                  <a-input-number v-model="crud.options.form.serverId" />
+                  <a-select v-model="crud.options.form.serverId" multiple>
+                    <a-option
+                      v-for="(server, index) in serverMap"
+                      :key="index"
+                      :value="index"
+                    >
+                      {{ server.name }}
+                    </a-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
+          </template>
+          <template #right>
+            <a-divider direction="vertical" />
+            <a-space size="mini">
+              <a-button
+                type="dashed"
+                status="success"
+                size="mini"
+                :loading="startLoading.loading.value"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="start"
+              >
+                <template #icon><icon-check-circle /></template>
+                启动</a-button
+              >
+              <a-button
+                type="dashed"
+                status="danger"
+                size="mini"
+                :loading="stopLoading.loading.value"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="stop"
+              >
+                <template #icon><icon-stop /></template>停止</a-button
+              >
+              <a-button
+                type="dashed"
+                size="mini"
+                :loading="checkLoading.loading.value"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="checkServer"
+              >
+                <template #icon><icon-search /></template>
+                状态查看</a-button
+              >
+            </a-space>
+            <a-divider direction="vertical" />
+            <a-space size="mini">
+              <a-button
+                type="outline"
+                size="small"
+                status="warning"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="showUpload = true"
+              >
+                <template #icon>
+                  <icon-upload />
+                </template>
+                一键部署</a-button
+              >
+
+              <a-button
+                type="outline"
+                size="small"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="clickReduction"
+              >
+                <template #icon>
+                  <icon-cloud />
+                </template>
+                系统还原</a-button
+              >
+              <deploy-history />
+            </a-space>
           </template>
         </CrudOperation>
 
@@ -125,7 +209,7 @@
                 }
               : undefined
           "
-          style="height: calc(100% - 209px); margin-bottom: 12px"
+          style="height: calc(100% - 128px); margin-bottom: 12px"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -179,67 +263,65 @@
             </div>
           </template>
 
-          <!--应用编号-->
+          <!--应用-->
           <template #appId="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.appId }}
+              {{
+                appMap
+                  ? appMap[record.appId]
+                    ? appMap[record.appId].name
+                    : ''
+                  : ''
+              }}
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.appId }}
+                {{
+                  appMap
+                    ? appMap[record.appId]
+                      ? appMap[record.appId].name
+                      : ''
+                    : ''
+                }}
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
                 {{
-                  crud.options.form[record.id].appId
-                    ? crud.options.form[record.id].appId
-                    : record.appId
+                  appMap
+                    ? appMap[
+                        crud.options.form[record.id].appId
+                          ? crud.options.form[record.id].appId
+                          : record.appId
+                      ]
+                      ? appMap[
+                          crud.options.form[record.id].appId
+                            ? crud.options.form[record.id].appId
+                            : record.appId
+                        ].name
+                      : ''
+                    : ''
                 }}
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-input-number
+              <a-select
                 v-model="crud.options.form[record.id].appId"
-                :default-value="record.appId"
-              />
-            </div>
-          </template>
-
-          <!--项目ID-->
-          <template #projectId="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.projectId }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.projectId }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].projectId
-                    ? crud.options.form[record.id].projectId
-                    : record.projectId
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input-number
-                v-model="crud.options.form[record.id].projectId"
-                :default-value="record.projectId"
-              />
+                :default-value="record.appId + ''"
+              >
+                <a-option
+                  v-for="(app, index) in appMap"
+                  :key="index"
+                  :value="index"
+                >
+                  {{ app.name }}
+                </a-option>
+              </a-select>
             </div>
           </template>
 
@@ -247,31 +329,65 @@
           <template #serverId="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.serverId }}
+              <a-space>
+                <a-tag
+                  v-for="server in record.server"
+                  :key="server.id"
+                  color="purple"
+                  >{{ server.name }}</a-tag
+                >
+              </a-space>
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
               <!--未修改的行-->
               <div v-show="!crud.options.form[record.id]">
-                {{ record.serverId }}
+                <a-space>
+                  <a-tag
+                    v-for="server in record.server"
+                    :key="server.id"
+                    color="purple"
+                    >{{ server.name }}</a-tag
+                  >
+                </a-space>
               </div>
               <!--修改完毕提交后-->
               <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].serverId
-                    ? crud.options.form[record.id].serverId
-                    : record.serverId
-                }}
+                <a-select
+                  v-model="crud.options.form[record.id].serverId"
+                  :default-value="record.server.map((v) => v.id)"
+                  placeholder="请选择..."
+                  multiple
+                  :disabled="true"
+                >
+                  <a-option
+                    v-for="server in serverMap"
+                    :key="server.id"
+                    :value="server.id"
+                    :tag-props="{ color: 'purple' }"
+                    >{{ server.name }}
+                  </a-option>
+                </a-select>
               </div>
             </div>
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-input-number
+              <a-select
                 v-model="crud.options.form[record.id].serverId"
-                :default-value="record.serverId"
-              />
+                :default-value="record.server.map((v) => v.id)"
+                placeholder="请选择..."
+                multiple
+              >
+                <a-option
+                  v-for="server in serverMap"
+                  :key="server.id"
+                  :value="server.id"
+                  :tag-props="{ color: 'purple' }"
+                  >{{ server.name }}
+                </a-option>
+              </a-select>
             </div>
           </template>
         </a-table>
@@ -285,13 +401,39 @@
 
 <script lang="ts" setup>
   import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-  import { OraDeploy } from '@/api/operation/deploy';
-  import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
+  import {
+    checkServerStatus,
+    OraDeploy,
+    startServer,
+    stopServer,
+    uploadApp,
+  } from '@/api/operation/deploy';
+  import {
+    computed,
+    getCurrentInstance,
+    onBeforeMount,
+    onMounted,
+    onUnmounted,
+    provide,
+    ref,
+  } from 'vue';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
   import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
-  import axios from 'axios';
   import { useI18n } from 'vue-i18n';
+  import { getOraServer, OraServer } from '@/api/operation/server';
+  import { getOraApp, OraApp } from '@/api/operation/app';
+  import useWebSocket from '@/hooks/websocket';
+  import useApiStore from '@/store/modules/api';
+  import { useUserStore } from '@/store';
+  import { Message, Modal } from '@arco-design/web-vue';
+  import useLoading from '@/hooks/loading';
+  import {
+    FileItem,
+    RequestOption,
+  } from '@arco-design/web-vue/es/upload/interfaces';
+  import { localUpload } from '@/api/tools/storage';
+  import DeployHistory from '@/views/operation/deploy/deploy-history.vue';
 
   const { t } = useI18n();
   const crud = useCrud<OraDeploy>({
@@ -321,11 +463,20 @@
       ignoreSwitch: true,
     },
     {
-      title: '应用编号',
+      title: '应用',
       dataIndex: 'appId',
       width: 150,
       display: true,
       slotName: 'appId',
+      tooltip: true,
+      ellipsis: true,
+    },
+    {
+      title: '服务器',
+      dataIndex: 'serverId',
+      width: 150,
+      display: true,
+      slotName: 'serverId',
       tooltip: true,
       ellipsis: true,
     },
@@ -365,40 +516,227 @@
       tooltip: true,
       ellipsis: true,
     },
-    {
-      title: '项目ID',
-      dataIndex: 'projectId',
-      width: 150,
-      display: true,
-      slotName: 'projectId',
-      tooltip: true,
-      ellipsis: true,
-    },
-    {
-      title: '服务器',
-      dataIndex: 'serverId',
-      width: 150,
-      display: true,
-      slotName: 'serverId',
-      tooltip: true,
-      ellipsis: true,
-    },
   ]);
   const tableColumns = computed(() => {
     return crud.options.tableInfo.columns?.filter((val) => val.display);
   });
 
-  // region    ↓-------------------------------- switch --------------------------------↓
-  // endregion ↑-------------------------------- switch --------------------------------↑
+  const serverMap = ref<{ [key: number]: OraServer }>({});
+  const appMap = ref<{ [key: number]: OraApp }>({});
+  // 获取服务器和应用信息
+  const getServerAndApp = async () => {
+    const server = await getOraServer();
+    serverMap.value = {};
+    server.data.list.forEach((val) => {
+      serverMap.value[val.id] = val;
+    });
+    const app = await getOraApp();
+    appMap.value = {};
+    app.data.list.forEach((val) => {
+      appMap.value[val.id] = val;
+    });
+  };
 
-  // region    ↓-------------------------------- rangePicker --------------------------------↓
-  // endregion ↑-------------------------------- rangePicker --------------------------------↑
+  const { user } = useUserStore();
+  const websocket = ref<null | WebSocket>(null);
+  const startLoading = useLoading(false);
+  // 检查是否勾选了一个数据
+  const checkSelectOne: () => boolean = () => {
+    if (crud.options.tableInfo.selectKeys.length !== 1) {
+      Message.warning('请先勾选数据/只能勾选1个数据');
+      return false;
+    }
+    return true;
+  };
+  // 启动websocket
+  const startWebsocket = () => {
+    if (!websocket.value) {
+      websocket.value = useWebSocket({
+        url: `/webSocket/${user?.username}`,
+        onOpen: () => {
+          Message.info('[部署管理]websocket已建立');
+        },
+        onClose: () => {
+          Message.warning('[部署管理]websocket已关闭');
+        },
+        onMessage: (res: any) => {
+          const data = JSON.parse(res.data);
+          if (data.msgType === 'ERROR') {
+            Message.error({
+              content: `[${data.msgType}] ${data.msg}`,
+              duration: 8000,
+              closable: true,
+            });
+          } else {
+            Message.info({
+              content: `[${data.msgType}] ${data.msg}`,
+              duration: 8000,
+              closable: true,
+            });
+          }
+        },
+        onError: (res: any) => {
+          const data = JSON.parse(res.data);
+          Message.error({
+            content: `[${data.msgType}] ${data.msg}`,
+            duration: 8000,
+            closable: true,
+          });
+        },
+      }).init();
+    }
+  };
+  provide('websocket', websocket);
+  provide('startWebsocket', startWebsocket);
 
+  // 启动
+  const start = async () => {
+    startLoading.toggle();
+    try {
+      if (!checkSelectOne()) return;
+      startWebsocket();
+      const { data } = await startServer(crud.options.tableInfo.selectKeys[0]);
+      Message.success({ content: data, duration: 8000, closable: true });
+    } catch (e) {
+      // ignore
+    }
+    startLoading.toggle();
+  };
+
+  const stopLoading = useLoading(false);
+  // 停止
+  const stop = async () => {
+    stopLoading.toggle();
+    try {
+      if (!checkSelectOne()) return;
+      startWebsocket();
+      const data: any = await stopServer(crud.options.tableInfo.selectKeys[0]);
+      if (data.code !== 20000) {
+        Message.error(`停止失败：${data.msg}`);
+      }
+    } catch (e) {
+      // ignore
+    }
+    stopLoading.toggle();
+  };
+
+  const checkLoading = useLoading(false);
+  // 检查运行状态
+  const checkServer = async () => {
+    checkLoading.toggle();
+    try {
+      if (!checkSelectOne()) return;
+      startWebsocket();
+      const data = await checkServerStatus(
+        crud.options.tableInfo.selectKeys[0]
+      );
+      if ((data as any).code !== 20000) {
+        Message.error(`出错了：${(data as any).msg}`);
+      }
+    } catch (e) {
+      // ignore
+    }
+    checkLoading.toggle();
+  };
+
+  const showUpload = ref(false);
+  const upload = ref<null | HTMLElement>(null);
+  const fileItems = ref<FileItem[]>([]);
+  const customRequest = (options: RequestOption) => {
+    // docs: https://axios-http.com/docs/cancellation
+    const controller = new AbortController();
+
+    (async function requestWrap() {
+      const {
+        onProgress,
+        onError,
+        onSuccess,
+        fileItem,
+        name = 'file',
+      } = options;
+      onProgress(20);
+      const formData = new FormData();
+      formData.append(name as string, fileItem.file as Blob);
+      const onUploadProgress = (event: ProgressEvent) => {
+        let percent;
+        if (event.total > 0) {
+          percent = (event.loaded / event.total) * 100;
+        }
+        onProgress(parseInt(String(percent), 10), event);
+      };
+      try {
+        const res = await uploadApp(
+          {
+            controller,
+            onUploadProgress,
+          },
+          formData,
+          crud.options.tableInfo.selectKeys[0]
+        );
+        global.$message.success('上传成功！');
+        showUpload.value = false;
+        onSuccess(res);
+      } catch (error) {
+        onError(error);
+      }
+    })();
+    return {
+      abort() {
+        controller.abort();
+      },
+    };
+  };
+  // 上传文件
+  const uploadFile = () => {
+    if (!checkSelectOne()) {
+      return;
+    }
+
+    if (!fileItems.value[0]) {
+      Message.error('请选择一个文件上传');
+    } else if (
+      // 文件大小大于100MB
+      (fileItems.value[0].file?.size ? fileItems.value[0].file?.size : 0) /
+        1024 /
+        1024 >
+      100
+    ) {
+      Modal.error({
+        title: '错误',
+        content: '文件大小不能超过100MB',
+      });
+    } else {
+      startWebsocket();
+      (upload.value as any).submit();
+    }
+  };
+
+  const showDeployHis = ref(false);
+  const selectDeployId = ref(0);
+  const clickReduction = () => {
+    if (checkSelectOne()) {
+      selectDeployId.value = crud.options.tableInfo.selectKeys[0] as number;
+      showDeployHis.value = true;
+    }
+  };
+  provide('showDeployHis', showDeployHis);
+  provide('selectDeployId', selectDeployId);
   // region    ↓-------------------------------- 钩子 --------------------------------↓
   onMounted(() => {
     crud.method.refresh();
+    getServerAndApp();
   });
-
+  crud.hook.beforeOpenAdd = () => {
+    getServerAndApp();
+    return true;
+  };
+  onUnmounted(() => {
+    // 关闭websocket
+    if (websocket.value) {
+      websocket.value.close();
+      console.log('[部署管理]websocket已关闭');
+    }
+  });
   // endregion ↑-------------------------------- 钩子 --------------------------------↑
 </script>
 

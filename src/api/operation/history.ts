@@ -4,5 +4,4 @@ export interface OraDeployHistory {
   deployUser: string;
   ip: string;
   deployId: number;
-  projectId: number;
 }

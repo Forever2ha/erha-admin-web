@@ -14,16 +14,6 @@
             </a-input>
           </a-col>
 
-          <!--项目ID搜索框-->
-          <a-col :span="6">
-            <a-input-number
-              v-model="crud.options.query.projectId"
-              placeholder="输入项目ID搜索"
-            >
-              <template #prefix> = </template>
-            </a-input-number>
-          </a-col>
-
           <a-col :span="6">
             <RROperation />
           </a-col>
@@ -87,16 +77,7 @@
                   <a-input-number v-model="crud.options.form.port" />
                 </a-form-item>
               </a-col>
-              <!--项目ID-->
-              <a-col :span="12">
-                <a-form-item
-                  field="projectId"
-                  label="项目ID"
-                  :rules="[{ required: true, message: '项目ID不能为空' }]"
-                >
-                  <a-input-number v-model="crud.options.form.projectId" />
-                </a-form-item>
-              </a-col>
+
               <!--启动脚本-->
               <a-col :span="24">
                 <a-form-item
@@ -386,7 +367,7 @@
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-input
+              <a-textarea
                 v-model="crud.options.form[record.id].startScript"
                 :default-value="record.startScript"
               />
@@ -418,41 +399,9 @@
 
             <!--修改情况下-->
             <div v-if="record.editable">
-              <a-input
+              <a-textarea
                 v-model="crud.options.form[record.id].deployScript"
                 :default-value="record.deployScript"
-              />
-            </div>
-          </template>
-
-          <!--项目ID-->
-          <template #projectId="{ record }">
-            <!--正常情况下-->
-            <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.projectId }}
-            </div>
-
-            <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
-            <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.projectId }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].projectId
-                    ? crud.options.form[record.id].projectId
-                    : record.projectId
-                }}
-              </div>
-            </div>
-
-            <!--修改情况下-->
-            <div v-if="record.editable">
-              <a-input-number
-                v-model="crud.options.form[record.id].projectId"
-                :default-value="record.projectId"
               />
             </div>
           </template>
@@ -598,15 +547,6 @@
       width: 180,
       display: true,
       slotName: 'updateTime',
-      tooltip: true,
-      ellipsis: true,
-    },
-    {
-      title: '项目ID',
-      dataIndex: 'projectId',
-      width: 150,
-      display: true,
-      slotName: 'projectId',
       tooltip: true,
       ellipsis: true,
     },
