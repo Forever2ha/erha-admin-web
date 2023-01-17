@@ -1,67 +1,83 @@
 <template>
   <div class="container">
+    <!--sql脚本上传文件-->
+    <a-modal
+      :visible="showUpload"
+      width="580px"
+      @cancel="showUpload = false"
+      @ok="uploadFile"
+    >
+      <template #title> 上传sql脚本 </template>
+      <a-upload
+        ref="upload"
+        v-model:file-list="fileItems"
+        :custom-request="customRequest"
+        :auto-upload="false"
+        :limit="1"
+      >
+        <template #upload-button>
+          <div
+            style="
+              width: 540px;
+              height: 158px;
+              color: var(--color-text-1);
+              line-height: 158px;
+              text-align: center;
+              background-color: var(--color-fill-2);
+              border: 1px dashed var(--color-fill-4);
+              border-radius: 2px;
+            "
+          >
+            <div>
+              拖拽文件到此 或者
+              <span style="color: #3370ff">点击上传</span>
+            </div>
+          </div>
+        </template>
+      </a-upload>
+    </a-modal>
     <div class="panel">
       <div style="position: relative; height: 100%">
         <!--查询表单-->
-        <a-row>
-          <a-col :flex="1">
-            <a-form
-              :model="crud.options.query"
-              :label-col-props="{ span: 6 }"
-              :wrapper-col-props="{ span: 18 }"
-              label-align="left"
+        <a-row :gutter="24" style="margin-bottom: 12px">
+          <!--名称搜索框-->
+          <a-col :span="6">
+            <a-input
+              v-model="crud.options.query.name"
+              placeholder="输入名称搜索"
             >
-              <a-scrollbar style="height: 104px; overflow: auto">
-                <a-row :gutter="16" style="width: 100%">
-                  <!--名称搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="name" label="名称">
-                      <a-input
-                        v-model="crud.options.query.name"
-                        placeholder="输入名称搜索"
-                      >
-                        <template #prefix> Like </template>
-                      </a-input>
-                    </a-form-item>
-                  </a-col>
-                  <!--账号搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="userName" label="账号">
-                      <a-input
-                        v-model="crud.options.query.userName"
-                        placeholder="输入账号搜索"
-                      >
-                        <template #prefix> Like </template>
-                      </a-input>
-                    </a-form-item>
-                  </a-col>
-                  <!--类型搜索框-->
-                  <a-col :span="8">
-                    <a-form-item field="typeDatabese" label="类型">
-                      <a-select
-                        v-model="crud.options.query.typeDatabese"
-                        placeholder="输入类型搜索"
-                      >
-                        <a-option
-                          v-for="s in dict.type_database"
-                          :key="s.detailId"
-                          :value="s.label"
-                        >
-                          {{ s.label }}
-                        </a-option>
-                      </a-select>
-                    </a-form-item>
-                  </a-col>
-                </a-row>
-              </a-scrollbar>
-            </a-form>
+              <template #prefix> Like </template>
+            </a-input>
           </a-col>
-          <a-divider style="height: 84px" direction="vertical" />
-          <a-col :flex="'86px'" style="text-align: right">
-            <RROperation direction="vertical" />
+          <!--账号搜索框-->
+          <a-col :span="6">
+            <a-input
+              v-model="crud.options.query.userName"
+              placeholder="输入账号搜索"
+            >
+              <template #prefix> Like </template>
+            </a-input>
+          </a-col>
+          <!--类型搜索框-->
+          <a-col :span="6">
+            <a-select
+              v-model="crud.options.query.typeDatabese"
+              placeholder="输入类型搜索"
+            >
+              <a-option
+                v-for="s in dict.type_database"
+                :key="s.detailId"
+                :value="s.label"
+              >
+                {{ s.label }}
+              </a-option>
+            </a-select>
+          </a-col>
+          <a-col :span="6">
+            <RROperation />
           </a-col>
         </a-row>
-        <a-divider style="margin-top: 0" />
+
         <CrudOperation
           :add-permission="['operation:oraDatabase:add']"
           :edit-permission="['operation:oraDatabase:edit']"
@@ -108,7 +124,7 @@
                   label="密码"
                   :rules="[{ required: true, message: '密码不能为空' }]"
                 >
-                  <a-input v-model="crud.options.form.pwd" />
+                  <a-input v-model="crud.options.form.pwd" type="password" />
                 </a-form-item>
               </a-col>
               <!--类型-->
@@ -132,6 +148,36 @@
                 </a-form-item>
               </a-col>
             </a-row>
+          </template>
+          <template #right>
+            <a-divider direction="vertical" />
+            <a-space>
+              <a-button
+                type="dashed"
+                size="small"
+                status="success"
+                :loading="connectLoading.value"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="clickConnect"
+              >
+                <template #icon>
+                  <icon-search />
+                </template>
+                测试连接</a-button
+              >
+              <a-button
+                type="dashed"
+                size="small"
+                status="warning"
+                :disabled="crud.options.tableInfo.selectKeys.length !== 1"
+                @click="showUpload = true"
+              >
+                <template #icon>
+                  <icon-upload />
+                </template>
+                执行sql脚本</a-button
+              >
+            </a-space>
           </template>
         </CrudOperation>
 
@@ -161,7 +207,7 @@
                 }
               : undefined
           "
-          style="height: calc(100% - 209px); margin-bottom: 12px"
+          style="height: calc(100% - 128px); margin-bottom: 12px"
         >
           <!--修改结果-->
           <template #result="{ record }">
@@ -315,23 +361,12 @@
           <template #pwd="{ record }">
             <!--正常情况下-->
             <div v-show="!record.editable && !crud.options.tableInfo.isEdit">
-              {{ record.pwd }}
+              ******
             </div>
 
             <!--修改完毕提交后/未修改的行(若修改全部成功则不会显示)-->
             <div v-if="!record.editable && crud.options.tableInfo.isEdit">
-              <!--未修改的行-->
-              <div v-show="!crud.options.form[record.id]">
-                {{ record.pwd }}
-              </div>
-              <!--修改完毕提交后-->
-              <div v-if="crud.options.form[record.id]">
-                {{
-                  crud.options.form[record.id].pwd
-                    ? crud.options.form[record.id].pwd
-                    : record.pwd
-                }}
-              </div>
+              ******
             </div>
 
             <!--修改情况下-->
@@ -339,6 +374,7 @@
               <a-input
                 v-model="crud.options.form[record.id].pwd"
                 :default-value="record.pwd"
+                type="password"
               />
             </div>
           </template>
@@ -392,14 +428,23 @@
 
 <script lang="ts" setup>
   import { useCrud, CrudStatus } from '@/components/crud/CRUD';
-  import { OraDatabase } from '@/api/operation/datebase';
+  import {
+    OraDatabase,
+    testConnection,
+    uploadSql,
+  } from '@/api/operation/datebase';
   import { computed, getCurrentInstance, onMounted, provide, ref } from 'vue';
   import { useDict } from '@/components/dict';
   import CrudOperation from '@/components/crud/CrudOperation.vue';
   import RROperation from '@/components/crud/RROperation.vue';
   import Pagination from '@/components/crud/Pagination.vue';
-  import axios from 'axios';
   import { useI18n } from 'vue-i18n';
+  import useLoading from '@/hooks/loading';
+  import { Message, Modal } from '@arco-design/web-vue';
+  import {
+    FileItem,
+    RequestOption,
+  } from '@arco-design/web-vue/es/upload/interfaces';
 
   const { t } = useI18n();
   const crud = useCrud<OraDatabase>({
@@ -413,6 +458,106 @@
     },
   });
   provide('crud', crud);
+
+  // 检查是否勾选了一个数据
+  const checkSelectOne: () => boolean = () => {
+    if (crud.options.tableInfo.selectKeys.length !== 1) {
+      Message.warning('请先勾选数据/只能勾选1个数据');
+      return false;
+    }
+    return true;
+  };
+
+  // 测试连接
+  const connectLoading = useLoading(false);
+  const clickConnect = async () => {
+    connectLoading.toggle();
+    try {
+      const { data } = await testConnection(
+        crud.options.tableInfo.selectKeys[0]
+      );
+      if (data) {
+        Message.success('连接成功！');
+      } else {
+        Message.error('连接失败！');
+      }
+    } catch (e) {
+      // ignore
+    }
+    connectLoading.toggle();
+  };
+
+  // 上传sql脚本
+  const showUpload = ref(false);
+  const upload = ref<null | HTMLElement>(null);
+  const fileItems = ref<FileItem[]>([]);
+  const customRequest = (options: RequestOption) => {
+    // docs: https://axios-http.com/docs/cancellation
+    const controller = new AbortController();
+
+    (async function requestWrap() {
+      const {
+        onProgress,
+        onError,
+        onSuccess,
+        fileItem,
+        name = 'file',
+      } = options;
+      onProgress(20);
+      const formData = new FormData();
+      formData.append(name as string, fileItem.file as Blob);
+      const onUploadProgress = (event: ProgressEvent) => {
+        let percent;
+        if (event.total > 0) {
+          percent = (event.loaded / event.total) * 100;
+        }
+        onProgress(parseInt(String(percent), 10), event);
+      };
+      try {
+        const res = await uploadSql(
+          {
+            controller,
+            onUploadProgress,
+          },
+          formData,
+          crud.options.tableInfo.selectKeys[0]
+        );
+        Message.info(res.data);
+        showUpload.value = false;
+        onSuccess(res);
+      } catch (error) {
+        onError(error);
+      }
+    })();
+    return {
+      abort() {
+        controller.abort();
+      },
+    };
+  };
+  // 上传文件
+  const uploadFile = () => {
+    if (!checkSelectOne()) {
+      return;
+    }
+
+    if (!fileItems.value[0]) {
+      Message.error('请选择一个文件上传');
+    } else if (
+      // 文件大小大于100MB
+      (fileItems.value[0].file?.size ? fileItems.value[0].file?.size : 0) /
+        1024 /
+        1024 >
+      100
+    ) {
+      Modal.error({
+        title: '错误',
+        content: '文件大小不能超过100MB',
+      });
+    } else {
+      (upload.value as any).submit();
+    }
+  };
 
   // 字典
   const dict = useDict('type_database');
