@@ -59,14 +59,20 @@ axios.interceptors.response.use(
     const tokenValid = ![40005].includes(res.code);
     // 40006是crud异常,由crud组件处理,
     if (![20000, 40006].includes(res.code)) {
-      // 40004登录失败,40000请求不合法,data中有具体原因
-      if ([40004, 40000].includes(res.code)) {
+      // 40004登录失败,40001请求参数有错误,40000请求不合法,data中有具体原因
+      if ([40004, 40000, 40001].includes(res.code)) {
+        let errMsg = '';
+        if (res.data) {
+          Object.keys(res.data as object).forEach((key) => {
+            errMsg += `[${key}:${(res.data as any)[key]}] `;
+          });
+        }
         Message.error({
-          content: `${res.msg}:${res.data ? res.data : ''}` || 'Error',
+          content: `${res.msg}${errMsg !== '' ? `:${errMsg}` : ''}`,
           duration: 20 * 1000,
           closable: true,
         });
-        return Promise.reject(new Error((res.data as string) || 'Error'));
+        return Promise.reject(new Error(res.msg || 'Error'));
       }
 
       // blob下载失败后返回json
