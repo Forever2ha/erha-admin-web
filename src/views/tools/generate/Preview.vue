@@ -28,7 +28,7 @@
 
   const getCode = async () => {
     const data = await axios.get(
-      `generate/preview?tableName=${(info as any).table.tableName}`
+      `tools/generate/preview?tableName=${(info as any).table.tableName}`
     );
     if ((data as any).code === 20000) {
       code.value = data.data;

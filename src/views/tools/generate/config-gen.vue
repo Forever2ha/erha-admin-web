@@ -204,7 +204,7 @@
         (configForm.value as any).tableName = info.table.tableName;
       }
       const data = await axios.put(
-        'generate/table/genConfig',
+        'tools/generate/table/genConfig',
         configForm.value
       );
       return (data as any).code === 20000;
@@ -240,13 +240,13 @@
   const getGenConfig = async () => {
     // 获取当前表的配置
     const data = await axios.get(
-      `/generate/table/genConfig?tableName=${info.table.tableName}`
+      `tools/generate/table/genConfig?tableName=${info.table.tableName}`
     );
     if (data.data) {
       configForm.value = data.data;
     }
     // 获取最近表的数据
-    const data2 = await axios.get(`/generate/table/genConfig`);
+    const data2 = await axios.get(`tools/generate/table/genConfig`);
     allRecentConfig.value = data2.data;
   };
 

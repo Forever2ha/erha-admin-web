@@ -26,5 +26,5 @@ export interface TableCol {
 
 // eslint-disable-next-line import/prefer-default-export
 export function getTableCols(tableName: string) {
-  return axios.get(`/generate/table/columns?tableName=${tableName}`);
+  return axios.get(`/tools/generate/table/columns?tableName=${tableName}`);
 }

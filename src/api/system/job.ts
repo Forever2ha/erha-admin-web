@@ -10,5 +10,5 @@ export interface Job {
 
 // eslint-disable-next-line import/prefer-default-export
 export function getJobList() {
-  return axios.get<Job[]>('/job/all');
+  return axios.get<Job[]>('/system/job/all');
 }

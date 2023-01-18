@@ -15,9 +15,11 @@ export interface Dict extends BaseField {
 }
 
 export function getDictDetail(dictName?: string) {
-  return axios.get<SingleDictDetail[]>('/dictDetail', { params: { dictName } });
+  return axios.get<SingleDictDetail[]>('/system/dictDetail', {
+    params: { dictName },
+  });
 }
 
 export function getDict() {
-  return axios.get('/dict?currentPage=1&pageSize=9999');
+  return axios.get('/system/dict?currentPage=1&pageSize=9999');
 }

@@ -549,7 +549,7 @@
   // crud组件
   const crud = useCrud<Role>({
     tag: '角色',
-    url: '/role',
+    url: '/system/role',
     title: 'system.role',
     tableInfo: {
       componentConfig: {

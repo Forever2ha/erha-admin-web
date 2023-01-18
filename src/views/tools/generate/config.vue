@@ -201,7 +201,10 @@
         });
         if (dealtForm.length !== 0) {
           loading.value = true;
-          const data = await axios.put('/generate/table/columns', dealtForm);
+          const data = await axios.put(
+            'tools/generate/table/columns',
+            dealtForm
+          );
           loading.value = false;
           if ((data as any).code === 20000) {
             // 清除表单数据
@@ -261,7 +264,7 @@
   // 同步字段数据
   const sync = async () => {
     const data: any = await axios.put(
-      `/generate/table/columns/sync/${info.table.tableName}`
+      `tools/generate/table/columns/sync/${info.table.tableName}`
     );
     if (data.code === 20000) {
       Object.keys(form).forEach((key) => {

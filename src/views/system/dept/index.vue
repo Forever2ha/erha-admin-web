@@ -413,7 +413,7 @@
 
   const crud = useCrud<Role>({
     tag: '部门',
-    url: '/dept',
+    url: '/system/dept',
     title: 'system.dept',
     tableInfo: {
       componentConfig: {

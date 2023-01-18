@@ -121,7 +121,7 @@
   const { t } = useI18n();
   const crud = useCrud<QuartzLog>({
     tag: '任务执行日志',
-    url: '/quartzLog',
+    url: '/system/quartzLog',
     title: 'system.quartzLog',
     tableInfo: {
       componentConfig: {

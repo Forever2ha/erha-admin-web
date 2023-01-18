@@ -361,7 +361,7 @@
   // region    ↓-------------------------------- crud --------------------------------↓
   const crud = useCrud<SingleDictDetail>({
     tag: '字典详情',
-    url: '/dictDetail',
+    url: '/system/dictDetail',
     title: 'system.dictDetail',
     tableInfo: {
       componentConfig: {

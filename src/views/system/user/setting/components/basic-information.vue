@@ -74,7 +74,7 @@
     await formRef.value?.resetFields();
   };
   const submit = async () => {
-    const res = await axios.put('/user/update', { ...formData.value });
+    const res = await axios.put('/system/user/update', { ...formData.value });
     if ((res as any).code === 20000) {
       await userStore.info();
       global.$message.success('修改成功！');

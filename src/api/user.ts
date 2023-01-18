@@ -32,15 +32,15 @@ export function logout() {
 }
 // 获取用户信息
 export function getUserInfo() {
-  return axios.get<UserState>('/user/info');
+  return axios.get<UserState>('/system/user/info');
 }
 export function switchRoles(name: string) {
-  return axios.post('/user/switchRoles', { name });
+  return axios.post('/system/user/switchRoles', { name });
 }
 
 // 获取当前角色菜单
 export function getMenuList() {
-  return axios.get<RouteRecordNormalized[]>('/menu/nowUser');
+  return axios.get<RouteRecordNormalized[]>('/system/menu/nowUser');
 }
 
 // 上传头像
@@ -52,5 +52,5 @@ export function userUploadApi(
   }
 ) {
   // const controller = new AbortController();
-  return axios.post('/user/updateAvatar', data, config);
+  return axios.post('/system/user/updateAvatar', data, config);
 }

@@ -270,7 +270,7 @@
 
   const crud = useCrud<Job>({
     tag: '岗位',
-    url: '/job',
+    url: '/system/job',
     title: 'system.job',
     tableInfo: {
       componentConfig: {

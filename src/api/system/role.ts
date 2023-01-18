@@ -13,13 +13,15 @@ export interface Role {
 }
 
 export function getRoleList() {
-  return axios.get<BaseResp<Role>>('/role/all');
+  return axios.get<BaseResp<Role>>('/system/role/all');
 }
 
 export function getMenuIdByRoleId(roleId: number) {
-  return axios.get<number[]>('/roleMenu/menuIds', { params: { roleId } });
+  return axios.get<number[]>('/system/roleMenu/menuIds', {
+    params: { roleId },
+  });
 }
 
 export function editRoleMenu(roleId: number, menuIdList: number[]) {
-  return axios.put('/roleMenu', { roleId, menuIdList });
+  return axios.put('/system/roleMenu', { roleId, menuIdList });
 }

@@ -611,7 +611,7 @@
   // region    ↓-------------------------------- crud --------------------------------↓
   const crud = useCrud<Menu>({
     tag: '菜单',
-    url: '/menu',
+    url: '/system/menu',
     title: 'system.menu',
     tableInfo: {
       componentConfig: {

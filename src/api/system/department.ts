@@ -24,13 +24,15 @@ export interface SummaryDept extends BaseField {
 }
 
 export function getDeptListTree() {
-  return axios.get<DeptTree[]>('/dept/listTree');
+  return axios.get<DeptTree[]>('/system/dept/listTree');
 }
 
 export function getAllDept() {
-  return axios.get<Dept[]>('/dept/all');
+  return axios.get<Dept[]>('/system/dept/all');
 }
 
 export function getChildrenDeptsById(deptId: number | null) {
-  return axios.get<BaseResp<SummaryDept>>('/dept', { params: { deptId } });
+  return axios.get<BaseResp<SummaryDept>>('/system/dept', {
+    params: { deptId },
+  });
 }

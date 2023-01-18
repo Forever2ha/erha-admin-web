@@ -96,7 +96,7 @@
   const global = (instance as any).appContext.config.globalProperties;
   const { t } = useI18n();
   const crud = useCrud<Table>({
-    url: 'generate/table',
+    url: '/tools/generate/table',
     tag: '表信息',
     title: 'generate/table',
     tableInfo: {
@@ -195,13 +195,13 @@
   const generate = async (r: any) => {
     toggle();
     try {
-      const res = await axios.get(`/generate?tableName=${r.tableName}`);
+      const res = await axios.get(`tools/generate?tableName=${r.tableName}`);
       if ((res as any).code === 20000) {
         global.$message.success('生成成功！');
       } else {
         global.$message.error(`生成失败:${(res as any).msg}`);
       }
-      const res2 = await axios.post(`/menu/generate/${r.tableName}`);
+      const res2 = await axios.post(`/system/menu/generate/${r.tableName}`);
       if ((res2 as any).code === 20000) {
         global.$message.success('菜单集成成功！');
       } else {

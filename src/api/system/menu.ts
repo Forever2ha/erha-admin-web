@@ -23,5 +23,5 @@ export interface Menu {
 }
 
 export function getMenuTree() {
-  return axios.get<Menu[]>('/menu');
+  return axios.get<Menu[]>('/system/menu');
 }

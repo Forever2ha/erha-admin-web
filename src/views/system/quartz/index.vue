@@ -602,7 +602,7 @@
 
   const crud = useCrud<Quartz>({
     tag: '任务调度',
-    url: '/quartz',
+    url: '/system/quartz',
     title: 'system.quartz',
   });
   provide('crud', crud);
@@ -763,7 +763,7 @@
 
   // 运行状态改变
   const statusClick = async (record: any) => {
-    const data = await axios.put('/quartz/switch', { jobId: record.id });
+    const data = await axios.put('/system/quartz/switch', { jobId: record.id });
     if ((data as any).code === 20000) {
       global.$message.success('修改成功');
       crud.update.setStatus(CrudStatus.NEED_REFRESH);

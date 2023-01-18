@@ -230,7 +230,7 @@
 
   const crud = useCrud<DictModel>({
     tag: '字典',
-    url: '/dict',
+    url: '/system/dict',
     title: 'system.dict',
     tableInfo: {
       componentConfig: {
