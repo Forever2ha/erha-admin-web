@@ -257,6 +257,9 @@
                   </a-form-item>
                 </a-col>
               </a-row>
+              <div style="color: red"
+                >* 初始密码为:123456，可以在用户设置 -> 安全设置修改</div
+              >
             </template>
           </crud-operation>
           <!--表格主体-->
@@ -697,7 +700,7 @@
   // crud组件
   const crud = useCrud<user>({
     tag: '用户',
-    url: '/user',
+    url: '/system/user',
     title: 'system.user',
   });
   provide('crud', crud);
