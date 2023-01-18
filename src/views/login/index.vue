@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img alt="logo" src="../../assets/logo.png" width="30" />
+      <img alt="logo" src="../../../logo.png" width="30" />
       <div class="logo-text">erha-admin</div>
     </div>
     <LoginBanner />

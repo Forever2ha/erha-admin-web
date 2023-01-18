@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img alt="logo" src="../../assets/logo.png" width="40" />
+        <img alt="logo" src="../../../logo.png" width="40" />
         <a-typography-title
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
