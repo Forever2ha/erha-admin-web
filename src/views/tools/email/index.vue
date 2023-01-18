@@ -3,7 +3,7 @@
     <div class="panel">
       <a-tabs position="left" :justify="true" style="height: 100%">
         <a-tab-pane key="1" title="配置">
-          <div style="position: relative; height: 100%">
+          <div style="position: relative; height: 100%; padding-right: 10px">
             <!--查询表单-->
             <a-row :gutter="24" style="margin-bottom: 12px">
               <!--发件人邮箱搜索框-->
