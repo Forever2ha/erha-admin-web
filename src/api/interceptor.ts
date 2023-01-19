@@ -63,9 +63,13 @@ axios.interceptors.response.use(
       if ([40004, 40000, 40001].includes(res.code)) {
         let errMsg = '';
         if (res.data) {
-          Object.keys(res.data as object).forEach((key) => {
-            errMsg += `[${key}:${(res.data as any)[key]}] `;
-          });
+          if (typeof res.data === 'string') {
+            errMsg = res.data;
+          } else {
+            Object.keys(res.data as object).forEach((key) => {
+              errMsg += `[${key}:${(res.data as any)[key]}] `;
+            });
+          }
         }
         Message.error({
           content: `${res.msg}${errMsg !== '' ? `:${errMsg}` : ''}`,
