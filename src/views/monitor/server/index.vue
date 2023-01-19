@@ -2,19 +2,28 @@
   <div class="container">
     <div class="left-side">
       <a-spin :loading="loading" style="width: 100%; height: inherit">
-        <chart :options="overviewChart" height="85%" />
+        <chart :options="overviewChart" height="80%" />
+
         <div style="height: 15%; padding-left: 10px">
-          <a-space style="padding-bottom: 10px">
-            <a-tag color="cyan"><icon-desktop />{{ info.sys.os }}</a-tag>
-            <a-tag color="blue"><icon-cloud />{{ info.sys.ip }}</a-tag>
-            <a-tag color="arcoblue">已不间断运行：{{ info.sys.day }}</a-tag>
-          </a-space>
-          <a-space style="">
-            <a-tag color="orange"><icon-bulb />{{ info.cpu.name }} </a-tag>
-            <a-tag color="orange">{{ info.cpu.package }}</a-tag>
-            <a-tag color="orange">{{ info.cpu.core }}</a-tag>
-            <a-tag color="orange">{{ info.cpu.logic }}</a-tag>
-          </a-space>
+          <div
+            ><a-space style="padding-bottom: 10px">
+              <a-tag color="blue"><icon-cloud />{{ info.sys.ip }}</a-tag>
+              <a-tag color="arcoblue">已不间断运行：{{ info.sys.day }}</a-tag>
+            </a-space></div
+          >
+          <div
+            ><a-space style="padding-bottom: 10px">
+              <a-tag color="cyan"><icon-desktop />{{ info.sys.os }}</a-tag>
+            </a-space></div
+          >
+          <div>
+            <a-space>
+              <a-tag color="orange"><icon-bulb />{{ info.cpu.name }} </a-tag>
+              <a-tag color="orange">{{ info.cpu.package }}</a-tag>
+              <a-tag color="orange">{{ info.cpu.core }}</a-tag>
+              <a-tag color="orange">{{ info.cpu.logic }}</a-tag>
+            </a-space>
+          </div>
         </div>
       </a-spin>
     </div>
