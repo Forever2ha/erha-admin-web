@@ -194,17 +194,20 @@
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import Avatar from '@/assets/images/avatar.png';
+  import useApiStore from '@/store/modules/api';
   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();
   const userStore = useUserStore();
+  const { baseApi } = useApiStore();
   const { logout } = useUser();
   const { changeLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
   const locales = [...LOCALE_OPTIONS];
+
   const avatar = computed(() => {
     return userStore.user?.avatarPath
-      ? `http://localhost:8080/api/avatar/${userStore.user?.avatarName}`
+      ? `${baseApi}/avatar/${userStore.user?.avatarName}`
       : Avatar;
   });
   const theme = computed(() => {

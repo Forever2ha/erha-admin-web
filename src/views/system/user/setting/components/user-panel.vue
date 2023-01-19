@@ -79,14 +79,16 @@
   import { useUserStore } from '@/store';
   import type { DescData } from '@arco-design/web-vue/es/descriptions/interface';
   import { userUploadApi } from '@/api/user';
+  import useApiStore from '@/store/modules/api';
 
   const instance = getCurrentInstance();
   const global = (instance as any).appContext.config.globalProperties;
   const userStore = useUserStore();
+  const { baseApi } = useApiStore();
   const file = {
     uid: '-2',
     name: 'avatar.png',
-    url: `http://localhost:8080/api/avatar/${userStore.user?.avatarName}`,
+    url: `${baseApi}/avatar/${userStore.user?.avatarName}`,
   };
   const renderData = [
     {
