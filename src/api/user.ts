@@ -42,6 +42,10 @@ export function switchRoles(name: string) {
 export function getMenuList() {
   return axios.get<RouteRecordNormalized[]>('/system/menu/nowUser');
 }
+// 修改密码
+export function editPassword(oldPassword: string, newPassword: string) {
+  return axios.put('/system/user/modifyPass', { newPassword, oldPassword });
+}
 
 // 上传头像
 export function userUploadApi(
