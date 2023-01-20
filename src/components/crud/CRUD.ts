@@ -402,14 +402,19 @@ const useCrud = <T>(opt: DeepPartial<CrudOptions<T>>) => {
       }
       status.value = CrudStatus.DELETING;
       options.form = options.tableInfo.selectKeys;
-      const data = (await axios.delete(options.url, {
-        data: options.tableInfo.selectKeys,
-      })) as any;
-      if (data.code === 20000) {
-        global.$notification.success('删除成功');
-      } else {
-        global.$notification.warning(`删除失败:${data.msg}`);
+      try {
+        const data = (await axios.delete(options.url, {
+          data: options.tableInfo.selectKeys,
+        })) as any;
+        if (data.code === 20000) {
+          global.$notification.success('删除成功');
+        } else {
+          global.$notification.warning(`删除失败:${data.msg}`);
+        }
+      } catch (e) {
+        // ignore
       }
+
       status.value = CrudStatus.NORMAL;
       options.form = {};
       options.tableInfo.selectKeys = [];
@@ -438,55 +443,59 @@ const useCrud = <T>(opt: DeepPartial<CrudOptions<T>>) => {
       });
 
       // todo 去除没有更改的属性
-      if (dealtForm.length !== 0) {
-        // 发送请求
-        const data = (await axios.put(options.url, dealtForm)) as any;
+      try {
+        if (dealtForm.length !== 0) {
+          // 发送请求
+          const data = (await axios.put(options.url, dealtForm)) as any;
 
-        if (data.code === 20000) {
-          options.tableInfo.isEdit = false;
-          update.turnToUnEditable(options.tableInfo.data as any[]);
-          update.setTableSelectKeys([]);
-          update.appendTableConfig({ checkbox: true });
-          global.$notification.success('更改成功');
-          (options.tableInfo.columns as any)[0].display = false;
-          method.refresh();
-          options.form = {};
-        } else {
-          global.$notification.warning('更改失败：部分/全部');
+          if (data.code === 20000) {
+            options.tableInfo.isEdit = false;
+            update.turnToUnEditable(options.tableInfo.data as any[]);
+            update.setTableSelectKeys([]);
+            update.appendTableConfig({ checkbox: true });
+            global.$notification.success('更改成功');
+            (options.tableInfo.columns as any)[0].display = false;
+            method.refresh();
+            options.form = {};
+          } else {
+            global.$notification.warning('更改失败：部分/全部');
 
-          const errMsg: { [key: string]: any[] } = {};
-          data.data.forEach((res: any) => {
-            if (!errMsg[res.id]) {
-              errMsg[res.id] = [];
-            }
-            errMsg[res.id].push({ ...res });
-          });
-
-          // 对批量修改的数据进行标记：有错/无错/无修改
-          const dealtFormKeys = dealtForm.map((key: any) => key.id);
-          // eslint-disable-next-line no-inner-declarations
-          function dealtRes(data_: any[]) {
-            data_.forEach((obj: any) => {
-              if (options.tableInfo.selectKeys.includes(obj.id)) {
-                if (errMsg[obj.id]) {
-                  // 有错
-                  obj.updateErr = errMsg[obj.id];
-                } else if (dealtFormKeys.includes(obj.id)) {
-                  // 无错
-                  obj.updateErr = false;
-                  obj.editable = false;
-                  options.props.formUpdateSuccessIds.push(obj.id);
-                }
+            const errMsg: { [key: string]: any[] } = {};
+            data.data.forEach((res: any) => {
+              if (!errMsg[res.id]) {
+                errMsg[res.id] = [];
               }
-              if (obj.children) {
-                dealtRes(obj.children);
-              }
+              errMsg[res.id].push({ ...res });
             });
+
+            // 对批量修改的数据进行标记：有错/无错/无修改
+            const dealtFormKeys = dealtForm.map((key: any) => key.id);
+            // eslint-disable-next-line no-inner-declarations
+            function dealtRes(data_: any[]) {
+              data_.forEach((obj: any) => {
+                if (options.tableInfo.selectKeys.includes(obj.id)) {
+                  if (errMsg[obj.id]) {
+                    // 有错
+                    obj.updateErr = errMsg[obj.id];
+                  } else if (dealtFormKeys.includes(obj.id)) {
+                    // 无错
+                    obj.updateErr = false;
+                    obj.editable = false;
+                    options.props.formUpdateSuccessIds.push(obj.id);
+                  }
+                }
+                if (obj.children) {
+                  dealtRes(obj.children);
+                }
+              });
+            }
+            dealtRes(options.tableInfo.data as any[]);
           }
-          dealtRes(options.tableInfo.data as any[]);
+        } else {
+          global.$notification.warning('您没有更改任何数据');
         }
-      } else {
-        global.$notification.warning('您没有更改任何数据');
+      } catch (e) {
+        // ignore
       }
 
       status.value = CrudStatus.NORMAL;

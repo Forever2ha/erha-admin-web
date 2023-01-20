@@ -205,14 +205,17 @@
   const { loading, toggle } = useLoading(false);
   const kick = async (userName: string[]) => {
     toggle();
-    const res = await axios.delete('/monitor/onlineuser', { data: userName });
+
     try {
+      const res = await axios.delete('/monitor/onlineuser', { data: userName });
       if ((res as any).code === 20000) {
         global.$message.success('操作成功！');
         crud.method.refresh();
       } else {
         global.$message.error(`操作失败！${(res as any).msg}`);
       }
+    } catch (e) {
+      // ignore
     } finally {
       toggle();
     }

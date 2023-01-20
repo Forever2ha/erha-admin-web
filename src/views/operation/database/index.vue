@@ -178,6 +178,9 @@
                 执行sql脚本</a-button
               >
             </a-space>
+            <div style="color: red">
+              ⚠️演示环境下，请勿输入自己的真实账户密码以及信息，被盗概不负责</div
+            >
           </template>
         </CrudOperation>
 

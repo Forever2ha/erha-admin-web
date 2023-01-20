@@ -6,7 +6,7 @@
   >
     <a-typography :style="{ marginTop: '10px' }">
       <a-typography-title :heading="4"
-        >🍀 欢迎使用ErHa-Admin v0.0.0(正在开发)</a-typography-title
+        >🍀 欢迎使用ErHa-Admin v0.0.1</a-typography-title
       >
       <a-typography-paragraph>
         <ul>
@@ -15,6 +15,7 @@
               >http://175.24.198.241/</a-link
             >
           </li>
+          <li>欢迎大家参与贡献，QQ群：727793103</li>
         </ul>
       </a-typography-paragraph>
 
@@ -39,7 +40,9 @@
       >
 
       <a-typography-title :heading="4">🌵 更新公告</a-typography-title>
-      暂无
+      v0.0.1 2023-01-20 基础功能完成
+      <a-typography-title :heading="4">⚠️ 注意</a-typography-title>
+      当前为线上预览版，部分功能限制使用
     </a-typography>
   </a-card>
 </template>

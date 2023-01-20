@@ -25,6 +25,11 @@
           :download-permission="['operation:oraServer:list']"
           style="margin-bottom: 12px"
         >
+          <template #right>
+            <div style="color: red">
+              ⚠️演示环境下，请勿输入自己的真实账户密码以及信息，被盗概不负责</div
+            >
+          </template>
           <template #addForm>
             <a-row :gutter="12">
               <!--名称-->
