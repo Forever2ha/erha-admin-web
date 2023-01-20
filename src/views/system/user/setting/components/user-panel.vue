@@ -80,6 +80,7 @@
   import type { DescData } from '@arco-design/web-vue/es/descriptions/interface';
   import { userUploadApi } from '@/api/user';
   import useApiStore from '@/store/modules/api';
+  import { Message } from '@arco-design/web-vue';
 
   const instance = getCurrentInstance();
   const global = (instance as any).appContext.config.globalProperties;
@@ -163,13 +164,17 @@
         // https://github.com/axios/axios/issues/1630
         // https://github.com/nuysoft/Mock/issues/127
 
-        const res = await userUploadApi(formData, {
-          controller,
-          onUploadProgress,
-        });
-        userStore.setAvatarPath(res.data.avatar);
-        global.$message.success('修改成功！');
-        onSuccess(res);
+        if ((fileItem.file?.size ? fileItem.file?.size : 0) > 1024 * 100) {
+          Message.error('演示环境下头像上传大小最大为100KB');
+        } else {
+          const res = await userUploadApi(formData, {
+            controller,
+            onUploadProgress,
+          });
+          userStore.setAvatarPath(res.data.avatar);
+          global.$message.success('修改成功！');
+          onSuccess(res);
+        }
       } catch (error) {
         onError(error);
       }

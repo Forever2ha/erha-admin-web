@@ -550,14 +550,12 @@ const beforeUpload = (file: File) => {
       });
     } else if (
       // 文件大小大于100MB
-      (fileItems.value[0].file?.size ? fileItems.value[0].file?.size : 0) /
-        1024 /
-        1024 >
-      100
+      (fileItems.value[0].file?.size ? fileItems.value[0].file?.size : 0) >
+      1024 * 50
     ) {
       Modal.error({
         title: '错误',
-        content: '文件大小不能超过100MB',
+        content: '演示环境下文件大小不能超过50KB',
       });
     } else {
       (upload.value as any).submit();
