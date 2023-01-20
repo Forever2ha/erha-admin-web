@@ -71,6 +71,7 @@ export default {
   'system.dept.table.subCount': 'subCount',
   // user
   'system.user': 'user',
+  'system.user.table.id': 'ID',
   'system.user.table.avatarName': 'avatarName',
   'system.user.table.avatarPath': 'avatarPath',
   'system.user.table.createTime': 'createTime',
@@ -97,6 +98,7 @@ export default {
   'system.user.status.lock': 'Lock',
   // role
   'system.role': 'role',
+  'system.role.table.id': 'ID',
   'system.role.table.name': 'name',
   'system.role.table.dataScope': 'dataScope',
   'system.role.table.dataPerm': 'dataPerm',

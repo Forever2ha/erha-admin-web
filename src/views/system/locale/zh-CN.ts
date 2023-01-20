@@ -74,6 +74,7 @@ export default {
   'system.dept.table.subCount': '子部门数量',
   // user
   'system.user': '用户',
+  'system.user.table.id': 'ID',
   'system.user.table.avatarName': '头像文件名',
   'system.user.table.avatarPath': '头像路径',
   'system.user.table.createTime': '创建时间',
@@ -100,6 +101,7 @@ export default {
   'system.user.status.lock': '锁定',
   // role
   'system.role': '角色',
+  'system.role.table.id': 'ID',
   'system.role.table.name': '名称',
   'system.role.table.dataScope': '数据范围',
   'system.role.table.dataPerm': '数据权限',
